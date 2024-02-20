@@ -6,7 +6,7 @@ import { StatusBar } from 'react-native';
 import * as NavigationBar from "expo-navigation-bar"
 
 const App = () => {
-    const isDarkMode = false;
+    const isDarkMode = true;
     NavigationBar.setBackgroundColorAsync(isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg).then();
     NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').then();
     let [fontsLoaded] = useFonts({
@@ -21,7 +21,8 @@ const App = () => {
     if (fontsLoaded) {
         return (
             <>
-                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} translucent backgroundColor={isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg } />
+                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} translucent
+                           backgroundColor={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent } />
                 <AppNavigator theme={mainTheme} isDarkMode={isDarkMode} />
             </>
         );

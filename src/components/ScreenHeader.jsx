@@ -8,9 +8,13 @@ const ScreenHeader = ({theme, isDarkMode, children}) => {
 
     const styles = StyleSheet.create({
         header: {
-            height: (57 + statusBarHeight),
-            backgroundColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg,
+            marginTop: statusBarHeight,
+            minHeight: '8%',
+            height: '9%',
+            maxHeight: '9%',
+            backgroundColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
             elevation: 3,
+            shadowColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
         },
     });
 
