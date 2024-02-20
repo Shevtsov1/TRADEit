@@ -1,10 +1,28 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import ScreenHeader from "../../../components/ScreenHeader";
 
-const Profile = () => {
+const Profile = ({theme, isDarkMode}) => {
+
+    const styles = StyleSheet.create({
+
+        /* BODY BEGIN */
+
+        body: {
+        },
+
+        /* BODY END */
+
+    });
+
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>P R O F I L E</Text>
+        <View style={{flex: 1}}>
+            <ScreenHeader theme={theme} isDarkMode={isDarkMode}>
+
+            </ScreenHeader>
+            <ScrollView style={styles.body}>
+                <Text>P R O F I L E</Text>
+            </ScrollView>
         </View>
     );
 };

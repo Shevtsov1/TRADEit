@@ -1,9 +1,14 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import BottomTabNavigator from "./src/navigation/Navigator";
-import {useFonts} from "expo-font";
+import { useFonts } from "expo-font";
+import AppNavigator from "./src/navigation/Navigator";
+import mainTheme from "./assets/themes/mainTheme";
+import { StatusBar } from 'react-native';
+import * as NavigationBar from "expo-navigation-bar"
 
 const App = () => {
+    const isDarkMode = false;
+    NavigationBar.setBackgroundColorAsync(isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg).then();
+    NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').then();
     let [fontsLoaded] = useFonts({
         'Montserrat-Black': require('./assets/fonts/Montserrat-Black.ttf'),
         'Montserrat-Bold': require('./assets/fonts/Montserrat-Bold.ttf'),
@@ -12,11 +17,13 @@ const App = () => {
         'Montserrat-Regular': require('./assets/fonts/Montserrat-Regular.ttf'),
         'Montserrat-Thin': require('./assets/fonts/Montserrat-Thin.ttf'),
     });
+
     if (fontsLoaded) {
         return (
-            <NavigationContainer>
-                <BottomTabNavigator />
-            </NavigationContainer>
+            <>
+                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} translucent backgroundColor={isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg } />
+                <AppNavigator theme={mainTheme} isDarkMode={isDarkMode} />
+            </>
         );
     }
 };

@@ -1,30 +1,42 @@
-const {Image} = require('react-native');
+const { Image } = require('react-native');
 
-const HomeTabBarIcon = ({theme, focused}) => (
+const getIconStyle = (focused, isDarkMode, theme) => {
+    const { colors_dark, colors_light } = theme;
+    const accentColor = isDarkMode ? colors_dark.accent : colors_light.accent;
+    const secondaryColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
+
+    return {
+        width: 24,
+        height: 24,
+        tintColor: focused ? accentColor : secondaryColor
+    };
+};
+
+const HomeTabBarIcon = ({ theme, focused, isDarkMode }) => (
     <Image
         source={require('./home.png')}
-        style={{width: 30, height: 30, tintColor: 'black'}}
+        style={getIconStyle(focused, isDarkMode, theme)}
     />
 );
 
-const CatalogTabBarIcon = ({theme, focused}) => (
+const CatalogTabBarIcon = ({ theme, focused, isDarkMode }) => (
     <Image
         source={require('./catalog.png')}
-        style={{width: 30, height: 30, tintColor: 'black'}}
+        style={getIconStyle(focused, isDarkMode, theme)}
     />
 );
 
-const FavoritesTabBarIcon = ({theme, focused}) => (
+const FavoritesTabBarIcon = ({ theme, focused, isDarkMode }) => (
     <Image
         source={require('./favorite.png')}
-        style={{width: 30, height: 30, tintColor: 'black'}}
+        style={getIconStyle(focused, isDarkMode, theme)}
     />
 );
 
-const ProfileTabBarIcon = ({theme, focused}) => (
+const ProfileTabBarIcon = ({ theme, focused, isDarkMode }) => (
     <Image
         source={require('./profile.png')}
-        style={{width: 30, height: 30, tintColor: 'black'}}
+        style={getIconStyle(focused, isDarkMode, theme)}
     />
 );
 
