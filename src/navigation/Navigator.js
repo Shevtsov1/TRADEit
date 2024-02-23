@@ -29,7 +29,7 @@ const BottomTabNavigator = ({theme, isDarkMode}) => {
                         fontFamily: 'Montserrat-Bold',
                     },
                     tabBarStyle: {
-                      backgroundColor: bgColor,
+                        backgroundColor: bgColor,
                     },
                     tabBarActiveTintColor: accentColor,
                     tabBarInactiveTintColor: secondaryColor,

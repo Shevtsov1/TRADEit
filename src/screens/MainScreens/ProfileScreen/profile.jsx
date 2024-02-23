@@ -15,6 +15,7 @@ const Profile = ({theme, isDarkMode}) => {
         /* BODY BEGIN */
 
         body: {
+            backgroundColor: bgColor,
         },
 
         /* BODY END */
