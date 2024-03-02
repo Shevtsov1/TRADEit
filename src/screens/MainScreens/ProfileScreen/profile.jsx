@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import ScreenHeader from "../../../components/ScreenHeader";
-import { SearchBar } from 'react-native-elements';
+import SearchBar from "../../../components/SearchBar";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const Profile = ({theme, isDarkMode}) => {
     const { colors_dark, colors_light } = theme;
@@ -20,27 +21,25 @@ const Profile = ({theme, isDarkMode}) => {
 
         /* BODY END */
 
+        /* HEADER BEGIN */
+
+        header: {
+            minHeight: hp('15%'),
+            maxHeight: hp('20%'),
+            backgroundColor: accentColor,
+            borderBottomStartRadius: 20,
+            borderBottomEndRadius: 20,
+        }
+
+        /* HEADER END */
+
     });
 
     return (
         <View style={{flex: 1}}>
-            <ScreenHeader theme={theme} isDarkMode={isDarkMode} style={{alignItems: 'center',
-                justifyContent: 'center'}}>
-                <SearchBar
-                platform="android"
-                containerStyle={{borderRadius: 10}}
-                inputContainerStyle={{}}
-                inputStyle={'text'}
-                leftIconContainerStyle={{tintColor: secondaryColor}}
-                rightIconContainerStyle={{}}
-                loadingProps={{}}
-                placeholder="Поиск"
-                placeholderTextColor={secondaryColor}
-                cancelButtonTitle="Отменить"
-                />
-            </ScreenHeader>
             <ScrollView style={styles.body}>
-                <View style={{backgroundColor: accentColor, borderBottomStartRadius: 20, borderBottomEndRadius: 20, elevation: 5}}>
+                <ScreenHeader theme={theme} isDarkMode={isDarkMode}/>
+                <View style={styles.header}>
                     <Text>adad</Text>
                 </View>
                 <Text>P R O F I L E</Text>
