@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import ScreenHeader from "../../../components/ScreenHeader";
 
 const Main = ({theme, isDarkMode}) => {
-    const { colors_dark, colors_light } = theme;
+    const { colors_dark, colors_light, neutral} = theme;
     const bgColor = isDarkMode ? colors_dark.bg : colors_light.bg;
+    const backColor = isDarkMode ? neutral.ntrl90 : neutral.ntrl20;
     const accentColor = isDarkMode ? colors_dark.accent : colors_light.accent;
     const textColor = isDarkMode ? colors_dark.text : colors_light.text;
     const secondaryColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
@@ -15,7 +16,9 @@ const Main = ({theme, isDarkMode}) => {
 
         body: {
             flex:1,
-            backgroundColor: bgColor,
+            backgroundColor: backColor,
+            justifyContent: "center",
+            alignItems: "center",
         },
 
         /* BODY END */
@@ -23,8 +26,9 @@ const Main = ({theme, isDarkMode}) => {
 
     return (
         <View style={{flex: 1}}>
+            <ScreenHeader theme={theme} isDarkMode={isDarkMode} page={'main'}/>
             <View style={styles.body}>
-                <ScreenHeader theme={theme} isDarkMode={isDarkMode}/>
+                <Text>M A I N</Text>
             </View>
         </View>
     );

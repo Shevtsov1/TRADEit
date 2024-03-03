@@ -3,7 +3,7 @@ import {View, StyleSheet, TextInput, Image, TouchableOpacity, Text} from 'react-
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const SearchBar = ({theme, isDarkMode}) => {
-    const {colors_dark, colors_light} = theme;
+    const {colors_dark, colors_light, neutral} = theme;
     const bgColor = isDarkMode ? colors_dark.bg : colors_light.bg;
     const accentColor = isDarkMode ? colors_dark.accent : colors_light.accent;
     const infoColor = isDarkMode ? colors_dark.info : colors_light.info;
@@ -21,15 +21,6 @@ const SearchBar = ({theme, isDarkMode}) => {
     };
 
     const styles = StyleSheet.create({
-        searchIcon: {
-            width: wp('10%'),
-            height: hp('5%'),
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 20,
-            backgroundColor: theme.neutral.ntrl10,
-            elevation: 5,
-        },
         container: {
             flexDirection:'row',
             alignItems: 'center',
@@ -66,10 +57,10 @@ const SearchBar = ({theme, isDarkMode}) => {
     return (
         <View>
             {!isExpanded && (
-                <TouchableOpacity onPress={toggleExpanded} style={styles.searchIcon}>
+                <TouchableOpacity onPress={toggleExpanded}>
                     <Image
                         source={require('../../assets/images/SearchBar/search.png')}
-                        style={{width: wp('6%'), height: hp('3%'), tintColor: theme.neutral.ntrl90}}
+                        style={{width: wp('6%'), height: hp('3%'), tintColor: accentColor}}
                     />
                 </TouchableOpacity>
             )}

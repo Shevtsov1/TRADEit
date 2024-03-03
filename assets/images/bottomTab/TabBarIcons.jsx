@@ -1,56 +1,53 @@
-const { Image } = require('react-native');
+import React from 'react';
+import { Image, StyleProp, ViewStyle } from 'react-native';
+import MainTabBarOutlined from '../bottomTab/home.png';
+import MainTabBarFilled from '../bottomTab/homeFilled.png';
+import CatalogTabBarOutlined from '../bottomTab/catalog.png';
+import CatalogTabBarFilled from '../bottomTab/catalogFilled.png';
+import FavoritesTabBarOutlined from '../bottomTab/favorite.png';
+import FavoritesTabBarFilled from '../bottomTab/favoriteFilled.png';
+import ProfileTabBarOutlined from '../bottomTab/profile.png';
+import ProfileTabBarFilled from '../bottomTab/profileFilled.png';
 
-const getIconStyle = (focused, isDarkMode, theme, size) => {
-    const { colors_dark, colors_light, neutral } = theme;
-    const activeColor = isDarkMode ? colors_dark.accent : colors_light.accent;
-    const inactiveColor = neutral.ntrl70;
-
-    return {
-        width: size,
-        height: size,
-        tintColor: focused ? activeColor : inactiveColor
-    };
+export const Icons = {
+    Main: {
+        activeIcon: MainTabBarFilled,
+        inActiveIcon: MainTabBarOutlined,
+    },
+    Catalog: {
+        activeIcon: CatalogTabBarFilled,
+        inActiveIcon: CatalogTabBarOutlined,
+    },
+    Favorites: {
+        activeIcon: FavoritesTabBarFilled,
+        inActiveIcon: FavoritesTabBarOutlined,
+    },
+    Profile: {
+        activeIcon: ProfileTabBarFilled,
+        inActiveIcon: ProfileTabBarOutlined,
+    },
 };
 
-const HomeTabBarIcon = ({ theme, focused, isDarkMode, size }) => (
-    <Image
-        source={require('./home.png')}
-        style={getIconStyle(focused, isDarkMode, theme, size)}
-    />
-);
+export interface IconProps {
+    type: string;
+    name: string;
+    color?: string;
+    size?: number;
+    style?: StyleProp<ViewStyle>;
+}
 
-const CatalogTabBarIcon = ({ theme, focused, isDarkMode, size }) => (
-    <Image
-        source={require('./catalog.png')}
-        style={getIconStyle(focused, isDarkMode, theme, size)}
-    />
-);
+const Icon = ({ type, name, color, size = 20, style }: IconProps) => {
 
-const AddTabBarIcon = ({ theme, focused, isDarkMode, size }) => (
-    <Image
-        source={require('./add.png')}
-        style={getIconStyle(focused, isDarkMode, theme, size)}
-    />
-);
-
-const FavoritesTabBarIcon = ({ theme, focused, isDarkMode, size }) => (
-    <Image
-        source={require('./favorite.png')}
-        style={getIconStyle(focused, isDarkMode, theme, size)}
-    />
-);
-
-const ProfileTabBarIcon = ({ theme, focused, isDarkMode, size }) => (
-    <Image
-        source={require('./profile.png')}
-        style={getIconStyle(focused, isDarkMode, theme, size)}
-    />
-);
-
-module.exports = {
-    CatalogTabBarIcon,
-    FavoritesTabBarIcon,
-    ProfileTabBarIcon,
-    HomeTabBarIcon,
-    AddTabBarIcon
+    return (
+        <>
+            {type && name && (
+                <Image
+                    source={name}
+                    style={[{ tintColor: color, width: size, height: size }, style]}
+                />
+            )}
+        </>
+    );
 };
+
+export default Icon;

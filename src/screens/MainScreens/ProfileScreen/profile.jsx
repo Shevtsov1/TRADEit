@@ -5,8 +5,9 @@ import SearchBar from "../../../components/SearchBar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const Profile = ({theme, isDarkMode}) => {
-    const { colors_dark, colors_light } = theme;
+    const { colors_dark, colors_light, neutral } = theme;
     const bgColor = isDarkMode ? colors_dark.bg : colors_light.bg;
+    const backColor = neutral.ntrl20;
     const accentColor = isDarkMode ? colors_dark.accent : colors_light.accent;
     const textColor = isDarkMode ? colors_dark.text : colors_light.text;
     const secondaryColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
@@ -16,7 +17,10 @@ const Profile = ({theme, isDarkMode}) => {
         /* BODY BEGIN */
 
         body: {
-            backgroundColor: bgColor,
+            flex:1,
+            backgroundColor: backColor,
+            justifyContent: "center",
+            alignItems: "center",
         },
 
         /* BODY END */
@@ -26,7 +30,7 @@ const Profile = ({theme, isDarkMode}) => {
         header: {
             minHeight: hp('15%'),
             maxHeight: hp('20%'),
-            backgroundColor: accentColor,
+            backgroundColor: bgColor,
             borderBottomStartRadius: 20,
             borderBottomEndRadius: 20,
         }
@@ -37,13 +41,10 @@ const Profile = ({theme, isDarkMode}) => {
 
     return (
         <View style={{flex: 1}}>
-            <ScrollView style={styles.body}>
-                <ScreenHeader theme={theme} isDarkMode={isDarkMode}/>
-                <View style={styles.header}>
-                    <Text>adad</Text>
-                </View>
+            <ScreenHeader theme={theme} isDarkMode={isDarkMode} page={'profile'}/>
+            <View style={styles.body}>
                 <Text>P R O F I L E</Text>
-            </ScrollView>
+            </View>
         </View>
     );
 };
