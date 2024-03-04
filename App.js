@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useFonts } from 'expo-font';
+import React, {useEffect, useState} from 'react';
+import {useFonts} from 'expo-font';
 import AppNavigator from './src/navigation/Navigator';
 import mainTheme from './assets/themes/mainTheme';
-import { StatusBar } from 'react-native';
-import * as NavigationBar from 'expo-navigation-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StatusBar} from "expo-status-bar";
 
 const App = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -19,34 +18,6 @@ const App = () => {
         'Montserrat-Regular': require('./assets/fonts/Montserrat-Regular.ttf'),
         'Montserrat-Thin': require('./assets/fonts/Montserrat-Thin.ttf'),
     });
-
-    useEffect(() => {
-        // Установка цвета панели навигации
-        const setNavigationBarColor = async () => {
-            try {
-                const backgroundColor = isDarkMode
-                    ? mainTheme.colors_dark.bg
-                    : mainTheme.colors_light.bg;
-
-                if (backgroundColor != null) {
-                    await NavigationBar.setBackgroundColorAsync(backgroundColor);
-                    await NavigationBar.setButtonStyleAsync(
-                        isDarkMode ? 'light' : 'dark'
-                    ).then();
-                } else {
-                    console.error('Error: Invalid background color value');
-                }
-            } catch (error) {
-                console.error('Error setting background color:', error);
-            }
-        };
-
-        setNavigationBarColor().catch((error) => {
-            console.log('Error while loading NavigationBarColor', error);
-        });
-    }, [isDarkMode]);
-
-    NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').then();
 
     useEffect(() => {
         // Загрузка сохраненной темы при запуске приложения
@@ -69,7 +40,7 @@ const App = () => {
         // Сохранение темы при изменении режима
         const saveTheme = async () => {
             try {
-                const theme = { isDarkMode };
+                const theme = {isDarkMode};
                 await AsyncStorage.setItem('theme', JSON.stringify(theme));
             } catch (error) {
                 console.error('Error saving theme:', error);
@@ -81,18 +52,13 @@ const App = () => {
 
     if (fontsLoaded) {
         return (
-            <SafeAreaProvider>
-                <StatusBar
-                    barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-                    translucent
-                    backgroundColor={
-                        isDarkMode
-                            ? mainTheme.colors_dark.bg
-                            : mainTheme.colors_light.bg
-                    }
-                />
-                <AppNavigator theme={mainTheme} isDarkMode={isDarkMode} />
-            </SafeAreaProvider>
+            <>
+                <StatusBar style={isDarkMode ? 'light' : 'dark'}
+                           backgroundColor={isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg}/>
+                <SafeAreaProvider>
+                    <AppNavigator theme={mainTheme} isDarkMode={isDarkMode}/>
+                </SafeAreaProvider>
+            </>
         );
     } else {
         return null;
