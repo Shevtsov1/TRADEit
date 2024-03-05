@@ -3,12 +3,14 @@ import {useFonts} from 'expo-font';
 import AppNavigator from './src/navigation/Navigator';
 import mainTheme from './assets/themes/mainTheme';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StatusBar} from 'react-native';
+import {ActivityIndicator, Image, StatusBar, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as NavigationBar from "expo-navigation-bar";
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const App = () => {
-    const [isDarkMode, setIsDarkMode] = useState(true);
+    const [initializing, setInitializing] = useState(true);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     StatusBar.setTranslucent(true);
     StatusBar.setBackgroundColor(isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg);
@@ -42,6 +44,7 @@ const App = () => {
         };
 
         loadTheme().then((r) => console.log('Theme loaded successfully'));
+        setInitializing(false);
     }, []); // Загрузка темы только один раз при запуске приложения
 
     useEffect(() => {
@@ -59,6 +62,35 @@ const App = () => {
     }, [isDarkMode]);
 
     if (fontsLoaded) {
+        if(initializing) {
+            return (
+                <SafeAreaProvider style={{flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg}}>
+                    <View style={{alignItems: "center",
+                        marginBottom: 20}}>
+                        {isDarkMode ? (
+                            <Image
+                                source={require('./assets/images/logo/logo-dark.png')}
+                                style={{width: wp('70%')}}
+                                resizeMode={"contain"}
+                            />
+                        ) : (
+                            <Image
+                                source={require('./assets/images/logo/logo-light.png')}
+                                style={{width: wp('70%')}}
+                                resizeMode={"contain"}
+                            />
+                        )}
+                    </View>
+                    <ActivityIndicator
+                        size={75}
+                        color={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent}
+                    />
+                </SafeAreaProvider>
+            )
+        }
         return (
             <SafeAreaProvider>
                 <AppNavigator theme={mainTheme} isDarkMode={isDarkMode}/>

@@ -36,7 +36,7 @@ export interface IconProps {
     style?: StyleProp<ViewStyle>;
 }
 
-const Icon = ({ type, name, color, size = 20, style }: IconProps) => {
+const Icon = ({ type, name, color, size = 22, style }: IconProps) => {
 
     return (
         <>
