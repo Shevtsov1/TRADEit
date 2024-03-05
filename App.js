@@ -3,11 +3,19 @@ import {useFonts} from 'expo-font';
 import AppNavigator from './src/navigation/Navigator';
 import mainTheme from './assets/themes/mainTheme';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StatusBar} from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
 
 const App = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true);
+
+    StatusBar.setTranslucent(true);
+    StatusBar.setBackgroundColor(isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg);
+    StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
+
+    NavigationBar.setBackgroundColorAsync(isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg).then();
+    NavigationBar.setButtonStyleAsync(isDarkMode ? 'light' : 'dark').then();
 
     // Загрузка шрифтов
     let [fontsLoaded] = useFonts({
@@ -52,13 +60,9 @@ const App = () => {
 
     if (fontsLoaded) {
         return (
-            <>
-                <StatusBar style={isDarkMode ? 'light' : 'dark'}
-                           backgroundColor={isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg}/>
-                <SafeAreaProvider>
-                    <AppNavigator theme={mainTheme} isDarkMode={isDarkMode}/>
-                </SafeAreaProvider>
-            </>
+            <SafeAreaProvider>
+                <AppNavigator theme={mainTheme} isDarkMode={isDarkMode}/>
+            </SafeAreaProvider>
         );
     } else {
         return null;

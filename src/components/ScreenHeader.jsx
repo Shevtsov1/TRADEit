@@ -14,7 +14,7 @@ const MainScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, te
                 style={styles.logoText}
                 theme={theme}
                 isDarkMode={isDarkMode}
-                text={'RS'}
+                text={'RoccaRent'}
                 colors={[textGradientStartColor, textGradientEndColor]}
             />
             <TouchableOpacity style={{
@@ -42,7 +42,7 @@ const CatalogScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor,
                 style={styles.logoText}
                 theme={theme}
                 isDarkMode={isDarkMode}
-                text={'RENTit'}
+                text={'RoccaRent'}
                 colors={[textGradientStartColor, textGradientEndColor]}
             />
             <Text>Chat</Text>
@@ -59,7 +59,7 @@ const FavoritesScreenHeader = ({theme, isDarkMode, styles, textGradientStartColo
                 style={styles.logoText}
                 theme={theme}
                 isDarkMode={isDarkMode}
-                text={'RENTit'}
+                text={'RoccaRent'}
                 colors={[textGradientStartColor, textGradientEndColor]}
             />
             <Text>Chat</Text>
@@ -76,7 +76,7 @@ const ProfileScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor,
                 style={styles.logoText}
                 theme={theme}
                 isDarkMode={isDarkMode}
-                text={'RENTit'}
+                text={'RoccaRent'}
                 colors={[textGradientStartColor, textGradientEndColor]}
             />
             <Text>Chat</Text>

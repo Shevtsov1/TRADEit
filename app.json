@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RENTSPLEND",
-    "slug": "RENTSPLEND",
+    "name": "ROCCARENT",
+    "slug": "ROCCARENT",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +22,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
+    },
+    "androidStatusBar" : {
+      "barStyle": "light-content"
+    },
+    "androidNavigationBar": {
+      "barStyle": "light-content"
     },
     "web": {
       "favicon": "./assets/favicon.png"

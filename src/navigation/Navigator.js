@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import React, { useEffect, useRef } from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, Text, Animated, View } from 'react-native';
 import Icon, { Icons } from '../../assets/images/bottomTab/TabBarIcons';
-import * as Animatable from 'react-native-animatable';
 import Main from "../screens/MainScreens/MainScreen/main";
 import Catalog from "../screens/MainScreens/CatalogScreen/catalog";
 import Favorites from "../screens/MainScreens/FavoritesScreen/favorites";
