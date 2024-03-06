@@ -21,9 +21,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ROCCARENT"
     },
-    "androidStatusBar" : {
+    "androidStatusBar": {
       "barStyle": "light-content"
     },
     "androidNavigationBar": {
@@ -34,6 +35,11 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "266d86df-1bc0-4290-9166-0dca17bd4e57"
+      }
+    }
   }
 }
