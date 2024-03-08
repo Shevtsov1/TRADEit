@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
 import ScreenHeader from "../../../components/ScreenHeader";
-import SearchBar from "../../../components/SearchBar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const Profile = ({theme, isDarkMode}) => {
