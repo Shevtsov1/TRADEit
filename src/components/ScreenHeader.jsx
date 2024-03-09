@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import Constants from "expo-constants";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -67,8 +67,7 @@ const FavoritesScreenHeader = ({theme, isDarkMode, styles, textGradientStartColo
     );
 };
 
-const ProfileScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, textGradientEndColor}) => {
-
+const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
     return (
         <View style={styles.header}>
             <Text style={{
@@ -76,31 +75,33 @@ const ProfileScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor,
                 fontSize: 24,
                 color: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
             }}>Профиль</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
-                <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center', marginEnd: 12}}>
-                    <Image
-                        source={require('../../assets/images/screens/profile/settings.png')}
-                        style={{
-                            width: 24,
-                            height: 24,
-                            tintColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
-                        }} resizeMode={"contain"}/>
-                </TouchableOpacity>
-                <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center'}}>
-                    <Image
-                        source={require('../../assets/images/screens/profile/logout-filled.png')}
-                        style={{
-                            width: 24,
-                            height: 24,
-                            tintColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
-                        }} resizeMode={"contain"}/>
-                </TouchableOpacity>
-            </View>
+            {user && (
+                <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
+                    <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center', marginEnd: 12}}>
+                        <Image
+                            source={require('../../assets/images/screens/profile/settings.png')}
+                            style={{
+                                width: 24,
+                                height: 24,
+                                tintColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
+                            }} resizeMode={"contain"}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center'}}>
+                        <Image
+                            source={require('../../assets/images/screens/profile/logout-filled.png')}
+                            style={{
+                                width: 24,
+                                height: 24,
+                                tintColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
+                            }} resizeMode={"contain"}/>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 };
 
-const ScreenHeader = ({theme, isDarkMode, page}) => {
+const ScreenHeader = ({user, theme, isDarkMode, page}) => {
     const {colors_dark, colors_light} = theme;
     const textGradientStartColor = isDarkMode ? colors_dark.accent : colors_light.accent;
     const textGradientEndColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
@@ -143,7 +144,7 @@ const ScreenHeader = ({theme, isDarkMode, page}) => {
     } else if (page === 'profile') {
         return <ProfileScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
                                     textGradientStartColor={textGradientStartColor}
-                                    textGradientEndColor={textGradientEndColor}/>;
+                                    textGradientEndColor={textGradientEndColor} user={user}/>;
     } else {
         return null;
     }

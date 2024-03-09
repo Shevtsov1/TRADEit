@@ -7,8 +7,11 @@ import {ActivityIndicator, Image, StatusBar, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as NavigationBar from "expo-navigation-bar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {onAuthStateChanged} from 'firebase/auth';
+import {auth} from './src/firebase/firebaseConfig';
 
 const App = () => {
+    const [user, setUser] = useState(null);
     const [initializing, setInitializing] = useState(true);
     const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -30,6 +33,16 @@ const App = () => {
     });
 
     useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth,(user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    useEffect(() => {
         // Загрузка сохраненной темы при запуске приложения
         const loadTheme = async () => {
             try {
@@ -43,7 +56,7 @@ const App = () => {
             }
         };
 
-        loadTheme().then((r) => console.log('Theme loaded successfully'));
+        loadTheme().then(() => console.log('Theme loaded successfully'));
         setInitializing(false);
     }, []); // Загрузка темы только один раз при запуске приложения
 
@@ -58,7 +71,7 @@ const App = () => {
             }
         };
 
-        saveTheme().then((r) => console.log('Theme saved successfully'));
+        saveTheme().then(() => console.log('Theme saved successfully'));
     }, [isDarkMode]);
 
     if (fontsLoaded) {
@@ -93,7 +106,7 @@ const App = () => {
         }
         return (
             <SafeAreaProvider>
-                <AppNavigator theme={mainTheme} isDarkMode={isDarkMode}/>
+                <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode}/>
             </SafeAreaProvider>
         );
     } else {

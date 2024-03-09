@@ -3,13 +3,17 @@ import {StyleSheet, View, Text, ScrollView, Image, TouchableOpacity} from 'react
 import ScreenHeader from "../../../components/ScreenHeader";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-const Profile = ({theme, isDarkMode}) => {
+const Profile = ({user, theme, isDarkMode, navigation}) => {
     const {colors_dark, colors_light, neutral} = theme;
     const bgColor = isDarkMode ? colors_dark.bg : colors_light.bg;
     const backColor = isDarkMode ? neutral.ntrl90 : neutral.ntrl20;
     const accentColor = isDarkMode ? colors_dark.accent : colors_light.accent;
     const textColor = isDarkMode ? colors_dark.text : colors_light.text;
     const secondaryColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
+
+    const handleAuthBtnPress = () => {
+        navigation.navigate('Auth');
+    }
 
     const styles = StyleSheet.create({
 
@@ -55,7 +59,7 @@ const Profile = ({theme, isDarkMode}) => {
 
     return (
         <View style={{flex: 1}}>
-            <ScreenHeader theme={theme} isDarkMode={isDarkMode} page={'profile'}/>
+            <ScreenHeader user={user} theme={theme} isDarkMode={isDarkMode} page={'profile'}/>
             <View style={styles.screen}>
                 <View style={styles.accountHeader}>
                     <View>
@@ -70,11 +74,25 @@ const Profile = ({theme, isDarkMode}) => {
                                     borderRadius: 15,
                                 }} source={require('../../../../assets/icon.png')} resizeMode={"contain"}/>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                <Text style={{ fontFamily: 'Montserrat-Bold', fontSize: 16, color: textColor, maxWidth: wp('80%'), overflow: 'hidden', alignSelf: 'center'}} numberOfLines={1} ellipsizeMode="tail">
-                                    Email or nickname email or nickname
+                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', height: 24}}
+                                              onPress={handleAuthBtnPress}>
+                                <Text style={{
+                                    fontFamily: 'Montserrat-Bold',
+                                    fontSize: 16,
+                                    color: textColor,
+                                    maxWidth: wp('70%'),
+                                    overflow: 'hidden',
+                                    alignSelf: 'center'
+                                }} numberOfLines={1} ellipsizeMode="tail">
+                                    {user ? user.email : 'user'}
                                 </Text>
-                                <Text style={{ fontFamily: 'Montserrat-Bold', fontSize: 20, lineHeight: 20, color: textColor, marginLeft: 8 }}>&#8250;</Text>
+                                <Text style={{
+                                    fontFamily: 'Montserrat-Bold',
+                                    fontSize: 20,
+                                    lineHeight: 20,
+                                    color: textColor,
+                                    marginLeft: 8
+                                }}>&#8250;</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
