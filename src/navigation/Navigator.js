@@ -1,5 +1,4 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { CurvedBottomBarExpo } from 'react-native-curved-bottom-bar';
 import {NavigationContainer} from "@react-navigation/native";
 import React, {useEffect, useRef} from 'react';
 import {SafeAreaView, StyleSheet, TouchableOpacity, Text, Animated, View} from 'react-native';
@@ -61,19 +60,30 @@ const Tab = createBottomTabNavigator();
 const TabButton = React.memo((props) => {
     const {item, onPress, accessibilityState, theme, isDarkMode} = props;
     const focused = accessibilityState.selected;
+    const rotation = useRef(new Animated.Value(0)).current;
     const scaleValue = useRef(new Animated.Value(1)).current;
     const translateYValue = useRef(new Animated.Value(0)).current;
     const opacityValue = useRef(new Animated.Value(0)).current;
     const activeTabBarIconColor = isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent;
     const inActiveTabBarIconColor = theme.neutral.ntrl60;
     const label = focused ? item.label : '';
-    const textColor = isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent;
+    const textColor = isDarkMode ? theme.colors_dark.text : theme.colors_light.text;
+    const accentColor = isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent;
     const bgColor = isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg;
     const backColor = isDarkMode ? theme.neutral.ntrl90 : theme.neutral.ntrl20;
 
+    const rotateInterpolation = rotation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg'],
+    });
 
     useEffect(() => {
         const animations = [
+            Animated.timing(rotation, {
+                toValue: focused ? 1 : 0,
+                duration: 500,
+                useNativeDriver: true,
+            }),
             Animated.spring(scaleValue, {
                 toValue: focused ? 1.2 : 1,
                 useNativeDriver: true,
@@ -103,35 +113,37 @@ const TabButton = React.memo((props) => {
         return (
             <TouchableOpacity onPress={handlePress} activeOpacity={1}
                               style={[styles.container, {
+                                  flex: 0.8,
                                   alignItems: "center",
-                                  backgroundColor: 'red',
+                                  backgroundColor: bgColor,
                               }]}>
 
                 <View style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    bottom: 30,
-                    width: 80,
-                    height: 60,
+                    bottom: 26,
+                    width: '100%',
+                    height: 64,
                     backgroundColor: backColor,
                     borderRadius: 30,
-                    elevation: 5,
-                    shadowColor: backColor
                 }}>
                     <View
                         style={[styles.iconWrapper, {
-                            width: 68,
-                            height: 48,
-                            borderRadius: 30,
+                            width: 54,
+                            height: 54,
+                            borderRadius: 100,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: bgColor
+                            backgroundColor: accentColor,
                         }]}>
-                        <Icon
-                            type={item.type}
-                            name={focused ? item.activeIcon : item.inActiveIcon}
-                            color={focused ? activeTabBarIconColor : inActiveTabBarIconColor}
-                        />
+                        <Animated.View style={{ transform: [{ rotate: rotateInterpolation }] }}>
+                            <Icon
+                                type={item.type}
+                                name={focused ? item.activeIcon : item.inActiveIcon}
+                                color={theme.colors_light.bg}
+                                size={30}
+                            />
+                        </Animated.View>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -144,8 +156,8 @@ const TabButton = React.memo((props) => {
                                   top: 0,
                                   alignItems: "center",
                                   backgroundColor: bgColor,
-                                  //borderTopEndRadius: item.route === "Catalog" ? 10 : 0,
-                                  //borderTopStartRadius: item.route === "Favorites" ? 10 : 0,
+                                  borderTopEndRadius: item.route === "Catalog" ? 10 : 0,
+                                  borderTopStartRadius: item.route === "Favorites" ? 10 : 0,
                               }]}>
 
                 <View style={styles.iconContainer}>
@@ -159,7 +171,7 @@ const TabButton = React.memo((props) => {
                     </Animated.View>
                     {focused && (
                         <Animated.View style={[styles.labelContainer, {opacity: opacityValue}]}>
-                            <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 12, color: textColor}}>{label}</Text>
+                            <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 12, color: accentColor}}>{label}</Text>
                         </Animated.View>
                     )}
                 </View>

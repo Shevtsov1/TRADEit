@@ -5,6 +5,38 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import SearchBar from "./SearchBar";
 import {GradientText} from "./GradientText";
 
+const AuthScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, textGradientEndColor, navigation}) => {
+
+    const handleCloseAuthBtn = () => {
+        navigation.goBack();
+    }
+
+    return (
+        <View style={styles.header}>
+            <View style={{flexDirection: 'row', alignItems:'center'}}>
+                <Image
+                    source={isDarkMode ? require('../../assets/images/logo/launcher-big-dark.png') : require('../../assets/images/logo/launcher-big.png')}
+                    style={{width: 36, height: 36, marginEnd: wp(5)}}/>
+                <GradientText
+                    style={styles.logoText}
+                    theme={theme}
+                    isDarkMode={isDarkMode}
+                    text={'RoccaRent'}
+                    colors={[textGradientStartColor, textGradientEndColor]}
+                />
+            </View>
+            <TouchableOpacity onPress={handleCloseAuthBtn}>
+                <Text style={{
+                    fontFamily: 'Montserrat-Medium',
+                    fontSize: 16,
+                    color: isDarkMode ? theme.colors_dark.text : theme.colors_light.text
+                }}>Закрыть</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+
+
 const MainScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, textGradientEndColor}) => {
 
     return (
@@ -77,7 +109,8 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
             }}>Профиль</Text>
             {user && (
                 <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
-                    <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center', marginEnd: 12}}>
+                    <TouchableOpacity
+                        style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center', marginEnd: 12}}>
                         <Image
                             source={require('../../assets/images/screens/profile/settings.png')}
                             style={{
@@ -101,53 +134,58 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
     );
 };
 
-const ScreenHeader = ({user, theme, isDarkMode, page}) => {
-    const {colors_dark, colors_light} = theme;
-    const textGradientStartColor = isDarkMode ? colors_dark.accent : colors_light.accent;
-    const textGradientEndColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
+const ScreenHeader = ({user, theme, isDarkMode, page, navigation}) => {
+        const {colors_dark, colors_light} = theme;
+        const textGradientStartColor = isDarkMode ? colors_dark.accent : colors_light.accent;
+        const textGradientEndColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
 
-    const statusBarHeight = Constants.statusBarHeight;
+        const statusBarHeight = Constants.statusBarHeight;
 
-    const styles = StyleSheet.create({
-        header: {
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexDirection: "row",
-            marginTop: statusBarHeight,
-            paddingHorizontal: wp('5%'),
-            minHeight: hp('6%'),
-            height: hp('8%'),
-            maxHeight: hp('8%'),
-            backgroundColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg,
-            elevation: 8,
-            shadowColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg,
-        },
-        logoText: {
-            fontFamily: 'Montserrat-Black',
-            fontSize: 26,
-        },
-    });
+        const styles = StyleSheet.create({
+            header: {
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                marginTop: statusBarHeight,
+                paddingHorizontal: wp('5%'),
+                minHeight: hp('6%'),
+                height: hp('8%'),
+                maxHeight: hp('8%'),
+                backgroundColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg,
+                elevation: 8,
+                shadowColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg,
+            },
+            logoText: {
+                fontFamily: 'Montserrat-Black',
+                fontSize: 26,
+            },
+        });
 
-    // В зависимости от значения `page`, выбираем нужный компонент для рендеринга
-    if (page === 'main') {
-        return <MainScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
-                                 textGradientStartColor={textGradientStartColor}
-                                 textGradientEndColor={textGradientEndColor}/>;
-    } else if (page === 'catalog') {
-        return <CatalogScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
-                                    textGradientStartColor={textGradientStartColor}
-                                    textGradientEndColor={textGradientEndColor}/>;
-    } else if (page === 'favorites') {
-        return <FavoritesScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
-                                      textGradientStartColor={textGradientStartColor}
-                                      textGradientEndColor={textGradientEndColor}/>;
-    } else if (page === 'profile') {
-        return <ProfileScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
-                                    textGradientStartColor={textGradientStartColor}
-                                    textGradientEndColor={textGradientEndColor} user={user}/>;
-    } else {
-        return null;
+        // В зависимости от значения `page`, выбираем нужный компонент для рендеринга
+        if (page === 'main') {
+            return <MainScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
+                                     textGradientStartColor={textGradientStartColor}
+                                     textGradientEndColor={textGradientEndColor}/>;
+        } else if (page === 'catalog') {
+            return <CatalogScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
+                                        textGradientStartColor={textGradientStartColor}
+                                        textGradientEndColor={textGradientEndColor}/>;
+        } else if (page === 'favorites') {
+            return <FavoritesScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
+                                          textGradientStartColor={textGradientStartColor}
+                                          textGradientEndColor={textGradientEndColor}/>;
+        } else if (page === 'profile') {
+            return <ProfileScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
+                                        textGradientStartColor={textGradientStartColor}
+                                        textGradientEndColor={textGradientEndColor} user={user}/>;
+        } else if (page === 'auth') {
+            return <AuthScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
+                                     textGradientStartColor={textGradientStartColor}
+                                     textGradientEndColor={textGradientEndColor} user={user} navigation={navigation}/>
+        } else {
+            return null;
+        }
     }
-};
+;
 
 export default ScreenHeader;
