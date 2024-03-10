@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SearchBar from "./SearchBar";
 import {GradientText} from "./GradientText";
+import {auth} from "../firebase/firebaseConfig";
 
 const AuthScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, textGradientEndColor, navigation}) => {
 
@@ -100,6 +101,9 @@ const FavoritesScreenHeader = ({theme, isDarkMode, styles, textGradientStartColo
 };
 
 const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
+    const handleSignOutBtn = () => {
+        auth.signOut().then();
+    }
     return (
         <View style={styles.header}>
             <Text style={{
@@ -119,7 +123,8 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
                                 tintColor: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
                             }} resizeMode={"contain"}/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center'}}>
+                    <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center'}}
+                    onPress={handleSignOutBtn}>
                         <Image
                             source={require('../../assets/images/screens/profile/logout-filled.png')}
                             style={{
