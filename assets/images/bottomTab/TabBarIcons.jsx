@@ -8,6 +8,7 @@ import FavoritesTabBarOutlined from '../bottomTab/favorite.png';
 import FavoritesTabBarFilled from '../bottomTab/favoriteFilled.png';
 import ProfileTabBarOutlined from '../bottomTab/profile.png';
 import ProfileTabBarFilled from '../bottomTab/profileFilled.png';
+import CreateAd from '../bottomTab/add.png';
 
 export const Icons = {
     Main: {
@@ -17,6 +18,10 @@ export const Icons = {
     Catalog: {
         activeIcon: CatalogTabBarFilled,
         inActiveIcon: CatalogTabBarOutlined,
+    },
+    CreateAd: {
+        activeIcon: CreateAd,
+        inActiveIcon: CreateAd,
     },
     Favorites: {
         activeIcon: FavoritesTabBarFilled,

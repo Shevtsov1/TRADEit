@@ -32,57 +32,56 @@ const App = () => {
         'Montserrat-Thin': require('./assets/fonts/Montserrat-Thin.ttf'),
     });
 
+    // Загрузка сохраненной темы при запуске приложения
+    const loadTheme = async () => {
+        try {
+            const savedTheme = await AsyncStorage.getItem('theme');
+            if (savedTheme) {
+                const theme = JSON.parse(savedTheme);
+                setIsDarkMode(!theme.isDarkMode);
+            }
+        } catch (error) {
+            console.error('Error loading theme:', error);
+        }
+    };
+
+    // Сохранение темы при изменении режима
+    const saveTheme = async () => {
+        try {
+            const theme = {isDarkMode};
+            await AsyncStorage.setItem('theme', JSON.stringify(theme));
+        } catch (error) {
+            console.error('Error saving theme:', error);
+        }
+    };
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth,(user) => {
+        // Изменение состояние пользователя
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
         });
-
+        loadTheme().then(() => console.log('Theme loaded successfully'));
+        saveTheme().then(() => console.log('Theme saved successfully'));
+        setInitializing(false);
         return () => {
             unsubscribe();
         };
-    }, []);
-
-    useEffect(() => {
-        // Загрузка сохраненной темы при запуске приложения
-        const loadTheme = async () => {
-            try {
-                const savedTheme = await AsyncStorage.getItem('theme');
-                if (savedTheme) {
-                    const theme = JSON.parse(savedTheme);
-                    setIsDarkMode(!theme.isDarkMode);
-                }
-            } catch (error) {
-                console.error('Error loading theme:', error);
-            }
-        };
-
-        loadTheme().then(() => console.log('Theme loaded successfully'));
-        setInitializing(false);
-    }, []); // Загрузка темы только один раз при запуске приложения
-
-    useEffect(() => {
-        // Сохранение темы при изменении режима
-        const saveTheme = async () => {
-            try {
-                const theme = {isDarkMode};
-                await AsyncStorage.setItem('theme', JSON.stringify(theme));
-            } catch (error) {
-                console.error('Error saving theme:', error);
-            }
-        };
-
-        saveTheme().then(() => console.log('Theme saved successfully'));
     }, [isDarkMode]);
 
+
     if (fontsLoaded) {
-        if(initializing) {
+        if (initializing) {
             return (
-                <SafeAreaProvider style={{flex: 1,
+                <SafeAreaProvider style={{
+                    flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg}}>
-                    <View style={{alignItems: "center",
-                        marginBottom: 20}}>
+                    backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg
+                }}>
+                    <View style={{
+                        alignItems: "center",
+                        marginBottom: 20
+                    }}>
                         {isDarkMode ? (
                             <Image
                                 source={require('./assets/images/logo/logo-dark.png')}
