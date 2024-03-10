@@ -7,7 +7,7 @@ import {ActivityIndicator, Image, StatusBar, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as NavigationBar from "expo-navigation-bar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {onAuthStateChanged} from 'firebase/auth';
+import {onAuthStateChanged, signInAnonymously} from 'firebase/auth';
 import {auth} from './src/firebase/firebaseConfig';
 
 const App = () => {
@@ -57,13 +57,33 @@ const App = () => {
     };
 
     useEffect(() => {
-        // Изменение состояние пользователя
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+            if (user) {
+                // Пользователь уже зарегистрирован
+                setUser(user);
+            } else {
+                // Пользователь не зарегистрирован, выполнение анонимной регистрации
+                const registerAnonymousUser = async () => {
+                    try {
+                        await signInAnonymously(auth);
+                        const anonymousUser = auth.currentUser;
+                        setUser(anonymousUser);
+                        console.log("Anonymous user logged in");
+                    } catch (error) {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log("Error while logging in anonymously:", errorCode, errorMessage);
+                    }
+                };
+
+                registerAnonymousUser();
+            }
         });
+
         loadTheme().then(() => console.log('Theme loaded successfully'));
         saveTheme().then(() => console.log('Theme saved successfully'));
         setInitializing(false);
+
         return () => {
             unsubscribe();
         };

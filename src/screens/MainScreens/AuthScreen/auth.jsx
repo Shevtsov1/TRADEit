@@ -3,7 +3,7 @@ import {View, Text, TextInput, TouchableOpacity, SafeAreaView, Button} from 'rea
 import {auth} from "../../../firebase/firebaseConfig";
 import {signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth"
 import ScreenHeader from "../../../components/ScreenHeader";
-import {ButtonGroup} from "react-native-elements";
+import { EmailAuthProvider, linkWithCredential } from "firebase/auth";
 import {heightPercentageToDP, widthPercentageToDP as wp, widthPercentageToDP} from "react-native-responsive-screen";
 
 const Auth = ({theme, isDarkMode, user, navigation}) => {
@@ -30,17 +30,15 @@ const Auth = ({theme, isDarkMode, user, navigation}) => {
     };
 
     const handleSignUp = () => {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                // User registered successfully
-                console.log('User Registered');
-                console.log(user);
+        const credential = EmailAuthProvider.credential(email, password);
+        linkWithCredential(auth.currentUser, credential)
+            .then((usercred) => {
+                const user = usercred.user;
+                console.log("Anonymous account successfully upgraded", user);
                 navigation.goBack();
-            })
-            .catch((error) => {
-                // Handle registration error
-                console.log('Registration error:', error);
-            });
+            }).catch((error) => {
+            console.log("Error upgrading anonymous account", error);
+        });
     };
 
     const handleLogOut = () => {

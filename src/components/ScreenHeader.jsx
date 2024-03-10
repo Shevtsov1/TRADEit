@@ -107,7 +107,7 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
                 fontSize: 24,
                 color: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent,
             }}>Профиль</Text>
-            {user && (
+            {!user.isAnonymous && (
                 <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
                     <TouchableOpacity
                         style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center', marginEnd: 12}}>

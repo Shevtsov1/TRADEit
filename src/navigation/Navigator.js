@@ -65,7 +65,7 @@ const TabButton = React.memo((props) => {
     const translateYValue = useRef(new Animated.Value(0)).current;
     const opacityValue = useRef(new Animated.Value(0)).current;
     const activeTabBarIconColor = isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent;
-    const inActiveTabBarIconColor = theme.neutral.ntrl60;
+    const inActiveTabBarIconColor = isDarkMode ? theme.neutral.ntrl20 : theme.neutral.ntrl90;
     const label = focused ? item.label : '';
     const textColor = isDarkMode ? theme.colors_dark.text : theme.colors_light.text;
     const accentColor = isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent;

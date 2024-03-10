@@ -67,12 +67,14 @@ const Profile = ({user, theme, isDarkMode, navigation}) => {
                             flexDirection: "row",
                             alignItems: "center"
                         }}>
-                            <TouchableOpacity style={{marginEnd: 12,}}>
+                            <TouchableOpacity style={{ width: 48, height: 48, marginEnd: 12, alignItems: 'center', justifyContent: 'center'}}>
                                 <Image style={{
-                                    width: 48,
-                                    height: 48,
+                                    width: 36,
+                                    height: 36,
                                     borderRadius: 15,
-                                }} source={require('../../../../assets/icon.png')} resizeMode={"contain"}/>
+                                    tintColor: textColor,
+                                }} source={user.isAnonymous ? require('../../../../assets/images/screens/profile/incognito.png') : require('../../../../assets/images/bottomTab/profileFilled.png')}
+                                       resizeMode={"contain"}/>
                             </TouchableOpacity>
                             <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', height: 24}}
                                               onPress={handleAuthBtnPress}>
@@ -84,7 +86,7 @@ const Profile = ({user, theme, isDarkMode, navigation}) => {
                                     overflow: 'hidden',
                                     alignSelf: 'center'
                                 }} numberOfLines={1} ellipsizeMode="tail">
-                                    {user ? user.email : 'user'}
+                                    {user.isAnonymous ? 'Вход и регистрация' : user.email}
                                 </Text>
                                 <Text style={{
                                     fontFamily: 'Montserrat-Bold',
@@ -109,68 +111,46 @@ const Profile = ({user, theme, isDarkMode, navigation}) => {
                     </View>
                 </View>
                 <ScrollView indicatorStyle={isDarkMode ? 'white' : 'black'} overScrollMode={"never"}>
-                    <Text>1</Text>
-                    <Text>1</Text>
-
-                    <Text>1</Text>
-
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-                    <Text>1</Text>
-
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
+                    <Text>Hello my dear friend i will play with you today</Text>
                 </ScrollView>
             </View>
         </View>
