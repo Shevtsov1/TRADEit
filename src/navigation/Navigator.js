@@ -8,7 +8,7 @@ import Catalog from "../screens/MainScreens/CatalogScreen/catalog";
 import Favorites from "../screens/MainScreens/FavoritesScreen/favorites";
 import {ProfileStackNavigator} from "./ProfileStackNavigator";
 import CreateAd from "../screens/MainScreens/CreateAdScreen/createAd";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Массив с конфигурациями вкладок
 const TabArr = [
@@ -111,40 +111,41 @@ const TabButton = React.memo((props) => {
     if (item.route === 'CreateAd') {
         // Отдельные стили для кнопки "CreateAd"
         return (
-            <TouchableOpacity onPress={handlePress} activeOpacity={1}
-                              style={[styles.container, {
-                                  flex: 0.8,
-                                  alignItems: "center",
-                                  backgroundColor: bgColor,
-                              }]}>
-
-                <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    bottom: 26,
-                    width: '100%',
-                    height: 64,
-                    backgroundColor: backColor,
-                    borderRadius: 30,
-                }}>
-                    <View
-                        style={[styles.iconWrapper, {
-                            width: 54,
-                            height: 54,
-                            borderRadius: 100,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: accentColor,
-                        }]}>
-                        <Animated.View style={{ transform: [{ rotate: rotateInterpolation }] }}>
-                            <Icon
-                                type={item.type}
-                                name={focused ? item.activeIcon : item.inActiveIcon}
-                                color={theme.colors_light.bg}
-                                size={30}
-                            />
-                        </Animated.View>
-                    </View>
+            <TouchableOpacity
+                onPress={handlePress}
+                activeOpacity={1}
+                style={[styles.container, { flex: 0.8, alignItems: 'center', backgroundColor: bgColor }]}
+            >
+                <View style={{ justifyContent: 'center', alignItems: 'center', bottom: 26, width: '100%', height: 64 }}>
+                    <LinearGradient
+                        colors={['transparent', backColor]}
+                        start={[0.5, 0]}
+                        end={[0.5, 1]}
+                        style={{ flex: 1, width: '100%', borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}
+                    >
+                        <View
+                            style={[
+                                styles.iconWrapper,
+                                {
+                                    width: 54,
+                                    height: 54,
+                                    borderRadius: 100,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: accentColor,
+                                },
+                            ]}
+                        >
+                            <Animated.View style={{ transform: [{ rotate: rotateInterpolation }] }}>
+                                <Icon
+                                    type={item.type}
+                                    name={focused ? item.activeIcon : item.inActiveIcon}
+                                    color={theme.colors_light.bg}
+                                    size={30}
+                                />
+                            </Animated.View>
+                        </View>
+                    </LinearGradient>
                 </View>
             </TouchableOpacity>
         );
