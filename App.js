@@ -9,6 +9,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {onAuthStateChanged, signInAnonymously} from 'firebase/auth';
 import {auth} from './src/firebase/firebaseConfig';
+import { Asset } from 'expo-asset';
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -32,6 +33,33 @@ const App = () => {
         'Montserrat-Regular': require('./assets/fonts/Montserrat-Regular.ttf'),
         'Montserrat-Thin': require('./assets/fonts/Montserrat-Thin.ttf'),
     });
+
+    async function loadImages() {
+        const images = [
+            require('./assets/images/logo/logo-dark.png'),
+            require('./assets/images/logo/logo-light.png'),
+            require('./assets/images/bottomTab/add.png'),
+            require('./assets/images/bottomTab/addFilled.png'),
+            require('./assets/images/bottomTab/home.png'),
+            require('./assets/images/bottomTab/homeFilled.png'),
+            require('./assets/images/bottomTab/catalog.png'),
+            require('./assets/images/bottomTab/catalogFilled.png'),
+            require('./assets/images/bottomTab/favorite.png'),
+            require('./assets/images/bottomTab/favoriteFilled.png'),
+            require('./assets/images/bottomTab/profile.png'),
+            require('./assets/images/bottomTab/profileFilled.png'),
+            require('./assets/images/screens/profile/incognito.png'),
+            require('./assets/images/screens/profile/right-arrow.png'),
+            require('./assets/images/screens/profile/logout-filled.png'),
+            require('./assets/images/screens/profile/settings.png'),
+        ];
+
+        const cacheImages = images.map((image) => {
+            return Asset.fromModule(image).downloadAsync();
+        });
+
+        return Promise.all(cacheImages);
+    }
 
     // Загрузка сохраненной темы при запуске приложения
     const loadTheme = async () => {
@@ -57,81 +85,80 @@ const App = () => {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Пользователь уже зарегистрирован
-                setUser(user);
-            } else {
-                // Пользователь не зарегистрирован, выполнение анонимной регистрации
-                const registerAnonymousUser = async () => {
-                    try {
-                        await signInAnonymously(auth);
-                        const anonymousUser = auth.currentUser;
-                        setUser(anonymousUser);
-                        console.log("Anonymous user logged in");
-                    } catch (error) {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log("Error while logging in anonymously:", errorCode, errorMessage);
-                    }
-                };
+        const initializeApp = async () => {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Пользователь уже зарегистрирован
+                    setUser(user);
+                } else {
+                    // Пользователь не зарегистрирован, выполнение анонимной регистрации
+                    const registerAnonymousUser = async () => {
+                        try {
+                            await signInAnonymously(auth);
+                            const anonymousUser = auth.currentUser;
+                            setUser(anonymousUser);
+                            console.log("Anonymous user logged in");
+                        } catch (error) {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.log("Error while logging in anonymously:", errorCode, errorMessage);
+                        }
+                    };
 
-                registerAnonymousUser();
-            }
-        });
+                    registerAnonymousUser().then();
+                }
+            });
 
-        loadTheme().then(() => console.log('Theme loaded successfully'));
-        saveTheme().then(() => console.log('Theme saved successfully'));
-        setInitializing(false);
-
-        return () => {
-            unsubscribe();
+            await loadTheme();
+            await saveTheme();
+            await loadImages();
+            setInitializing(false);
+            return () => {
+                unsubscribe();
+            };
         };
+
+        initializeApp().then();
     }, [isDarkMode]);
 
 
-    if (fontsLoaded) {
-        if (initializing) {
-            return (
-                <SafeAreaProvider style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg
-                }}>
-                    <View style={{
-                        alignItems: "center",
-                        marginBottom: 20
-                    }}>
-                        {isDarkMode ? (
-                            <Image
-                                source={require('./assets/images/logo/logo-dark.png')}
-                                style={{width: wp('70%')}}
-                                resizeMode={"contain"}
-                            />
-                        ) : (
-                            <Image
-                                source={require('./assets/images/logo/logo-light.png')}
-                                style={{width: wp('70%')}}
-                                resizeMode={"contain"}
-                            />
-                        )}
-                    </View>
-                    <ActivityIndicator
-                        size={75}
-                        color={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent}
-                    />
-                </SafeAreaProvider>
-            )
-        }
         return (
             <SafeAreaProvider>
-                <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode}/>
+                {initializing || !fontsLoaded ? (
+                    <View style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg
+                    }}>
+                        <View style={{
+                            alignItems: "center",
+                            marginBottom: 20
+                        }}>
+                            {isDarkMode ? (
+                                <Image
+                                    source={require('./assets/images/logo/logo-dark.png')}
+                                    style={{width: wp('70%')}}
+                                    resizeMode={"contain"}
+                                />
+                            ) : (
+                                <Image
+                                    source={require('./assets/images/logo/logo-light.png')}
+                                    style={{width: wp('70%')}}
+                                    resizeMode={"contain"}
+                                />
+                            )}
+                        </View>
+                        <ActivityIndicator
+                            size={75}
+                            color={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent}
+                        />
+                    </View>
+                ) : (
+                    <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode}/>
+                )}
             </SafeAreaProvider>
         );
-    } else {
-        return null;
-    }
 };
 
 export default App;

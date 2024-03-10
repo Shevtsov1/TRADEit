@@ -119,6 +119,7 @@ const TabButton = React.memo((props) => {
                 <View style={{ justifyContent: 'center', alignItems: 'center', bottom: 26, width: '100%', height: 64 }}>
                     <LinearGradient
                         colors={['transparent', backColor]}
+                        locations={[0.43, 0]}
                         start={[0.5, 0]}
                         end={[0.5, 1]}
                         style={{ flex: 1, width: '100%', borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}
