@@ -5,6 +5,7 @@ const mainTheme = {
         secondary: '#26BA7A',
         info: '#EB5757',
         text: '#FDFDFD',
+        back:  '#434E58',
     },
     colors_light: {
         bg: '#FDFDFD',
@@ -12,6 +13,7 @@ const mainTheme = {
         secondary: '#FF7438',
         info: '#EB5757',
         text: '#1F2C37',
+        back:  '#ECF1F6',
     },
     neutral: {
         ntrl10: '#FDFDFD',

@@ -35,8 +35,8 @@ const Auth = ({theme, isDarkMode, user, navigation}) => {
                     tabBarLabelStyle: {
                         margin: 0,
                         textTransform: 'none',
-                        fontFamily: 'Montserrat-Medium',
-                        fontSize: 14,
+                        fontFamily: 'Montserrat-Bold',
+                        fontSize: 16,
                         color: textColor,
                     },
                     tabBarPressColor: isDarkMode ? theme.neutral.ntrl90 : theme.neutral.ntrl50,
