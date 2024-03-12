@@ -50,6 +50,7 @@ const Icon = ({ type, name, color, size = 22, style }: IconProps) => {
                 <Image
                     source={name}
                     style={[{ tintColor: color, width: size, height: size }, style]}
+                    resizeMode={"contain"}
                 />
             )}
         </>

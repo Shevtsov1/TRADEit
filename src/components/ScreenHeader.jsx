@@ -14,18 +14,8 @@ const AuthScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, te
 
     return (
         <View style={styles.header}>
-            <View style={{flexDirection: 'row', alignItems:'center'}}>
-                <Image
-                    source={isDarkMode ? require('../../assets/images/logo/launcher-big-dark.png') : require('../../assets/images/logo/launcher-big.png')}
-                    style={{width: 36, height: 36, marginEnd: wp(5)}}/>
-                <GradientText
-                    style={styles.logoText}
-                    theme={theme}
-                    isDarkMode={isDarkMode}
-                    text={'RoccaRent'}
-                    colors={[textGradientStartColor, textGradientEndColor]}
-                />
-            </View>
+            <GradientText style={styles.logoText} theme={theme} isDarkMode={isDarkMode} text={'RoccaRent'}
+                          colors={[textGradientStartColor, textGradientEndColor]}/>
             <TouchableOpacity onPress={handleCloseAuthBtn}>
                 <Text style={{
                     fontFamily: 'Montserrat-Medium',
@@ -124,7 +114,7 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
                             }} resizeMode={"contain"}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={{width: 36, height: 36, alignItems: 'center', justifyContent: 'center'}}
-                    onPress={handleSignOutBtn}>
+                                      onPress={handleSignOutBtn}>
                         <Image
                             source={require('../../assets/images/screens/profile/logout-filled.png')}
                             style={{
