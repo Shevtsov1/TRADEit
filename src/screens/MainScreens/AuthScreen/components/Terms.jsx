@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, Modal, Button, StyleSheet, ScrollView} from 'react-native';
 
-const Terms = ({theme, isVisible, onClose, handleConfirm}) => {
+const Terms = ({theme, isDarkMode, isVisible, onClose, handleConfirm}) => {
     const [isScrollAtBottom, setIsScrollAtBottom] = useState(false);
 
     const handleAccept = () => {
@@ -25,7 +25,7 @@ const Terms = ({theme, isVisible, onClose, handleConfirm}) => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
         },
         modalContent: {
-            backgroundColor: theme.colors.background,
+            backgroundColor: isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg ,
             padding: 20,
             borderRadius: 8,
         },
@@ -33,11 +33,11 @@ const Terms = ({theme, isVisible, onClose, handleConfirm}) => {
             fontSize: 24,
             fontWeight: 'bold',
             marginBottom: 10,
-            color: theme.colors.text,
+            color: isDarkMode ? theme.colors_dark.text : theme.colors_light.text,
         },
         text: {
             marginBottom: 20,
-            color: theme.colors.text,
+            color: isDarkMode ? theme.colors_dark.text : theme.colors_light.text,
             fontSize: 18,
         },
     });
@@ -178,7 +178,7 @@ const Terms = ({theme, isVisible, onClose, handleConfirm}) => {
                     <Button
                         title="Принять"
                         onPress={handleAccept}
-                        color={theme.colors.primary}
+                        color={isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent}
                         disabled={!isScrollAtBottom}
                     />
                 </View>

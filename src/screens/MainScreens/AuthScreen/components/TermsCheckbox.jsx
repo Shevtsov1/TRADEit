@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, Image, Text, StyleSheet, View} from 'react-native';
 
-import images from '../../../../../assets/images/checkboxes';
 import Terms from "./Terms";
+import {Icon} from "react-native-elements";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 
-const TermsCheckbox = ({theme, isActive, onCheckboxToggle}) => {
+const TermsCheckbox = ({theme, isDarkMode, isActive, onCheckboxToggle}) => {
     const [isChecked, setIsChecked] = useState(isActive);
     const [showTerms, setShowTerms] = useState(false);
 
@@ -27,17 +28,28 @@ const TermsCheckbox = ({theme, isActive, onCheckboxToggle}) => {
     };
 
     return (
-        <View>
-            <TouchableOpacity onPress={handleTermsPress} style={styles.container}>
-                <Image
-                    source={isChecked ? images.checkboxDark : images.uncheckedCheckboxDark}
-                    style={[styles.checkbox, {tintColor: theme.colors.primary}]}
-                />
-                <Text style={[styles.label, {color: theme.colors.text}]}>
-                    Пользовательское соглашение
-                </Text>
+        <View style={{marginStart: widthPercentageToDP(3)}}>
+            <TouchableOpacity onPress={handleCheckboxPress} style={styles.container}>
+                <Image style={{
+                    height: 24,
+                    width: 24,
+                    tintColor: isChecked ? (isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent) : (isDarkMode ? theme.colors_dark.text : theme.colors_light.text)
+                }} resizeMethod={"resize"}
+                       source={isChecked ? require('../../../../../assets/images/checkbox.png') : require('../../../../../assets/images/checkbox-unchecked.png')}/>
+                <View style={{flex: 1, marginHorizontal: widthPercentageToDP(4)}}>
+                    <Text
+                        style={[styles.label, {color: isDarkMode ? theme.colors_dark.text : theme.colors_light.text}]}>
+                        Я соглашаюсь с условиями
+                        <TouchableOpacity onPress={handleTermsPress}>
+                            <Text style={[styles.label, {color: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent}]}>
+                            пользовательского соглашения
+                            </Text>
+                        </TouchableOpacity>
+                    </Text>
+                </View>
             </TouchableOpacity>
-            <Terms theme={theme} isVisible={showTerms} handleConfirm={handleCheckboxPress} onClose={handleCloseTerms}/>
+            <Terms theme={theme} isDarkMode={isDarkMode} isVisible={showTerms} handleConfirm={handleCheckboxPress}
+                   onClose={handleCloseTerms}/>
         </View>
     );
 };
@@ -54,7 +66,8 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     label: {
-        fontSize: 16,
+        fontFamily: 'Montserrat-Medium',
+        fontSize: 14,
     },
 });
 
