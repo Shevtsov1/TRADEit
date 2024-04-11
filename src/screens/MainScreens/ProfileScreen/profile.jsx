@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
 import ScreenHeader from "../../../components/ScreenHeader";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {Avatar} from "react-native-elements";
 
 const Profile = ({user, theme, isDarkMode, navigation}) => {
     const {colors_dark, colors_light, neutral} = theme;
@@ -67,35 +68,81 @@ const Profile = ({user, theme, isDarkMode, navigation}) => {
                             flexDirection: "row",
                             alignItems: "center"
                         }}>
-                            <TouchableOpacity style={{ width: 48, height: 48, marginEnd: 12, alignItems: 'center', justifyContent: 'center'}}>
-                                <Image style={{
-                                    width: 36,
-                                    height: 36,
-                                    borderRadius: 15,
-                                    tintColor: textColor,
-                                }} source={user.isAnonymous ? require('../../../../assets/images/screens/profile/incognito.png') : require('../../../../assets/images/bottomTab/profileFilled.png')}
-                                       resizeMode={"contain"}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', height: 24}}
-                                              onPress={handleAuthBtnPress}>
-                                <Text style={{
-                                    fontFamily: 'Montserrat-Bold',
-                                    fontSize: 16,
-                                    color: textColor,
-                                    maxWidth: wp('70%'),
-                                    overflow: 'hidden',
-                                    alignSelf: 'center'
-                                }} numberOfLines={1} ellipsizeMode="tail">
-                                    {user.isAnonymous ? 'Вход и регистрация' : user.email}
-                                </Text>
-                                <Text style={{
-                                    fontFamily: 'Montserrat-Bold',
-                                    fontSize: 20,
-                                    lineHeight: 20,
-                                    color: textColor,
-                                    marginLeft: 8
-                                }}>&#8250;</Text>
-                            </TouchableOpacity>
+                            {user.isAnonymous ?
+                                <TouchableOpacity style={{
+                                    flexDirection: "row",
+                                    alignItems: "center"
+                                }} onPress={handleAuthBtnPress}>
+                                    <View style={{
+                                        width: 48,
+                                        height: 48,
+                                        marginEnd: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Avatar
+                                            size={32}
+                                            rounded
+                                            source={require('../../../../assets/images/screens/profile/incognito.png')}
+                                        />
+                                    </View>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', height: 24}}>
+                                        <Text style={{
+                                            fontFamily: 'Montserrat-Bold',
+                                            fontSize: 16,
+                                            color: textColor,
+                                            maxWidth: wp('70%'),
+                                            overflow: 'hidden',
+                                            alignSelf: 'center'
+                                        }} numberOfLines={1} ellipsizeMode="tail">
+                                            Вход и регистрация
+                                        </Text>
+                                        <Text style={{
+                                            fontFamily: 'Montserrat-Bold',
+                                            fontSize: 20,
+                                            lineHeight: 20,
+                                            color: textColor,
+                                            marginLeft: 8
+                                        }}>&#8250;</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                :
+                                <>
+                                    <TouchableOpacity style={{
+                                        width: 48,
+                                        height: 48,
+                                        marginEnd: 12,
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Avatar
+                                            size={32}
+                                            rounded
+                                            source={require('../../../../assets/images/bottomTab/profile.png')}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', height: 24}}
+                                                      onPress={handleAuthBtnPress}>
+                                        <Text style={{
+                                            fontFamily: 'Montserrat-Bold',
+                                            fontSize: 16,
+                                            color: textColor,
+                                            maxWidth: wp('70%'),
+                                            overflow: 'hidden',
+                                            alignSelf: 'center'
+                                        }} numberOfLines={1} ellipsizeMode="tail">
+                                            {user.email}
+                                        </Text>
+                                        <Text style={{
+                                            fontFamily: 'Montserrat-Bold',
+                                            fontSize: 20,
+                                            lineHeight: 20,
+                                            color: textColor,
+                                            marginLeft: 8
+                                        }}>&#8250;</Text>
+                                    </TouchableOpacity>
+                                </>
+                            }
                         </View>
                     </View>
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: hp('1%')}}>
