@@ -4,7 +4,7 @@ import ScreenHeader from "../../../components/ScreenHeader";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {Avatar} from "react-native-elements";
 
-const Profile = ({user, theme, isDarkMode, navigation}) => {
+const Profile = ({user, theme, isDarkMode, navigation, setUser}) => {
     const {colors_dark, colors_light, neutral} = theme;
     const bgColor = isDarkMode ? colors_dark.bg : colors_light.bg;
     const backColor = isDarkMode ? neutral.ntrl90 : neutral.ntrl20;
@@ -60,7 +60,7 @@ const Profile = ({user, theme, isDarkMode, navigation}) => {
 
     return (
         <View style={{flex: 1}}>
-            <ScreenHeader user={user} theme={theme} isDarkMode={isDarkMode} page={'profile'}/>
+            <ScreenHeader user={user} theme={theme} isDarkMode={isDarkMode} setUser={setUser} page={'profile'}/>
             <View style={styles.screen}>
                 <View style={styles.accountHeader}>
                     <View>
