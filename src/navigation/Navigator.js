@@ -8,7 +8,7 @@ import Catalog from "../screens/MainScreens/CatalogScreen/catalog";
 import Favorites from "../screens/MainScreens/FavoritesScreen/favorites";
 import {ProfileStackNavigator} from "./ProfileStackNavigator";
 import CreateAd from "../screens/MainScreens/CreateAdScreen/createAd";
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 
 // Массив с конфигурациями вкладок
 const TabArr = [
@@ -114,15 +114,21 @@ const TabButton = React.memo((props) => {
             <TouchableOpacity
                 onPress={handlePress}
                 activeOpacity={1}
-                style={[styles.container, { flex: 0.8, alignItems: 'center', backgroundColor: bgColor }]}
+                style={[styles.container, {flex: 0.8, alignItems: 'center', backgroundColor: bgColor}]}
             >
-                <View style={{ justifyContent: 'center', alignItems: 'center', bottom: 26, width: '100%', height: 64 }}>
+                <View style={{justifyContent: 'center', alignItems: 'center', bottom: 26, width: '100%', height: 64}}>
                     <LinearGradient
                         colors={['transparent', backColor]}
                         locations={[0.43, 0]}
                         start={[0.5, 0]}
                         end={[0.5, 1]}
-                        style={{ flex: 1, width: '100%', borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            borderRadius: 30,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
                     >
                         <View
                             style={[
@@ -137,7 +143,7 @@ const TabButton = React.memo((props) => {
                                 },
                             ]}
                         >
-                            <Animated.View style={{ transform: [{ rotate: rotateInterpolation }] }}>
+                            <Animated.View style={{transform: [{rotate: rotateInterpolation}]}}>
                                 <Icon
                                     type={item.type}
                                     name={focused ? item.activeIcon : item.inActiveIcon}
@@ -173,7 +179,8 @@ const TabButton = React.memo((props) => {
                     </Animated.View>
                     {focused && (
                         <Animated.View style={[styles.labelContainer, {opacity: opacityValue}]}>
-                            <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 12, color: accentColor}}>{label}</Text>
+                            <Text
+                                style={{fontFamily: 'Montserrat-Bold', fontSize: 12, color: accentColor}}>{label}</Text>
                         </Animated.View>
                     )}
                 </View>
@@ -183,7 +190,7 @@ const TabButton = React.memo((props) => {
 });
 
 // Компонент нижней навигации по вкладкам
-const BottomTabNavigator = ({user, theme, isDarkMode}) => {
+const BottomTabNavigator = ({user, theme, isDarkMode, setInitializing, setUser}) => {
     return (
         <SafeAreaView style={{flex: 1}}>
             <Tab.Navigator
@@ -208,7 +215,8 @@ const BottomTabNavigator = ({user, theme, isDarkMode}) => {
                                         ),
                                     }}
                         >
-                            {(props) => <item.component {...props} user={user} theme={theme} isDarkMode={isDarkMode}/>}
+                            {(props) => <item.component {...props} user={user} theme={theme} isDarkMode={isDarkMode}
+                                                        setInitializing={setInitializing} setUser={setUser}/>}
                         </Tab.Screen>
                     )
                 })}
@@ -218,9 +226,10 @@ const BottomTabNavigator = ({user, theme, isDarkMode}) => {
 }
 
 // Компонент навигации приложения
-const AppNavigator = ({user, theme, isDarkMode}) => (
+const AppNavigator = ({user, theme, isDarkMode, setInitializing, setUser}) => (
     <NavigationContainer>
-        <BottomTabNavigator user={user} theme={theme} isDarkMode={isDarkMode}/>
+        <BottomTabNavigator user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}
+                            setUser={setUser}/>
     </NavigationContainer>
 );
 

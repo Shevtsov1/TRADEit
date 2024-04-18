@@ -29,7 +29,7 @@ const TermsCheckbox = ({theme, isDarkMode, isActive, onCheckboxToggle}) => {
 
     return (
         <View style={{marginStart: widthPercentageToDP(3)}}>
-            <TouchableOpacity onPress={handleCheckboxPress} style={styles.container}>
+            <TouchableOpacity onPress={handleTermsPress} style={styles.container}>
                 <Image style={{
                     height: 24,
                     width: 24,
@@ -39,12 +39,7 @@ const TermsCheckbox = ({theme, isDarkMode, isActive, onCheckboxToggle}) => {
                 <View style={{flex: 1, marginHorizontal: widthPercentageToDP(4)}}>
                     <Text
                         style={[styles.label, {color: isDarkMode ? theme.colors_dark.text : theme.colors_light.text}]}>
-                        Я соглашаюсь с условиями
-                        <TouchableOpacity onPress={handleTermsPress}>
-                            <Text style={[styles.label, {color: isDarkMode ? theme.colors_dark.accent : theme.colors_light.accent}]}>
-                            пользовательского соглашения
-                            </Text>
-                        </TouchableOpacity>
+                        Я соглашаюсь с условиями пользовательского соглашения
                     </Text>
                 </View>
             </TouchableOpacity>

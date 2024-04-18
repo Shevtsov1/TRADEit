@@ -1,23 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     Image,
     ScrollView,
     Animated,
     Easing,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator,
+    ToastAndroid,
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import {CheckBox, Divider, Icon, Input, Tooltip} from "react-native-elements";
+import {CheckBox, Divider, Icon, Input, Dialog} from "react-native-elements";
 import {EmailAuthProvider, GoogleAuthProvider, signInWithCredential, linkWithCredential} from "firebase/auth";
 import TermsCheckbox from "./TermsCheckbox";
 import {auth} from "../../../../firebase/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LogUp = ({theme, isDarkMode, user}) => {
+const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
     const [isAdviceShown, setIsAdviceShown] = useState(true);
     const [accountType, setAccountType] = useState('personal');
     const [adviceHeight, setAdviceHeight] = useState(0);
@@ -25,7 +26,6 @@ const LogUp = ({theme, isDarkMode, user}) => {
     const [isConfirmPasswordSecure, setIsConfirmPasswordSecure] = useState(true);
     const [authBtnDisabled, setAuthBtnDisabled] = useState(true);
     const [btnIsLoading, setBtnIsLoading] = useState(false);
-    const [snackbarIsVisible, setTooltipIsVisible] = useState(true);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -139,15 +139,30 @@ const LogUp = ({theme, isDarkMode, user}) => {
     };
 
     const handleLogUpBtn = () => {
-        setBtnIsLoading(true);
+        setInitializing(true);
+        let toastText = '';
+        let errorCaught = false;
+        const prevUser = auth.currentUser;
         linkWithCredential(auth.currentUser, credential)
-            .then(() => {
-                console.log("Anonymous account successfully upgraded", user);
+            .then(async () => {
+                setUser(auth.currentUser);
+                if (prevUser.isAnonymous) {
+                    await prevUser.delete();
+                }
+                toastText = 'Регистрация завершена успешно';
+                try {
+                    await AsyncStorage.setItem('user', JSON.stringify(auth.currentUser));
+                    console.log('Пользователь сохранен в AsyncStorage');
+                } catch (error) {
+                    console.error('Ошибка при сохранении пользователя в AsyncStorage:', error);
+                }
             }).catch((error) => {
-            console.log("Error upgrading anonymous account", error);
+                errorCaught = true;
+                toastText = 'Ошибка регистрации, ' + error.message;
         });
         setTimeout(() => {
-            setBtnIsLoading(false);
+            setInitializing(false);
+            ToastAndroid.show(toastText, 10000);
         }, 2000);
     }
 
@@ -287,21 +302,38 @@ const LogUp = ({theme, isDarkMode, user}) => {
                                         marginBottom: hp(1),
                                         color: textColor,
                                     }}>Сервисы</Text>
-                                    <TouchableOpacity style={{
-                                        width: 42,
-                                        height: 42,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginStart: wp(3),
-                                        marginBottom: hp(1),
-                                        borderRadius: 5,
-                                        borderWidth: 1,
-                                        borderColor: theme.neutral.ntrl50,
-                                        backgroundColor: bgColor,
-                                    }} onPress={handleGoogleAuthBtn}>
-                                        <Image source={require('../../../../../assets/images/google-icon.png')}
-                                               style={{height: 24, width: 24, resizeMode: 'contain'}}/>
-                                    </TouchableOpacity>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <TouchableOpacity style={{
+                                            width: 42,
+                                            height: 42,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginStart: wp(3),
+                                            marginBottom: hp(1),
+                                            borderRadius: 5,
+                                            borderWidth: 1,
+                                            borderColor: theme.neutral.ntrl50,
+                                            backgroundColor: bgColor,
+                                        }}>
+                                            <Image source={require('../../../../../assets/images/telephone.png')}
+                                                   style={{height: 26, width: 26, resizeMode: 'contain'}}/>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{
+                                            width: 42,
+                                            height: 42,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginStart: wp(3),
+                                            marginBottom: hp(1),
+                                            borderRadius: 5,
+                                            borderWidth: 1,
+                                            borderColor: theme.neutral.ntrl50,
+                                            backgroundColor: bgColor,
+                                        }}>
+                                            <Image source={require('../../../../../assets/images/google-icon.png')}
+                                                   style={{height: 24, width: 24, resizeMode: 'contain'}}/>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                                 <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
                                          style={{marginBottom: hp(1)}}/>
