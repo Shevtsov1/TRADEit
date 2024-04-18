@@ -7,10 +7,9 @@ import {ActivityIndicator, Image, StatusBar, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as NavigationBar from "expo-navigation-bar";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import {onAuthStateChanged, signInAnonymously, deleteUser} from 'firebase/auth';
+import {onAuthStateChanged, signInAnonymously} from 'firebase/auth';
 import {auth} from './src/firebase/firebaseConfig';
-import {Asset} from 'expo-asset';
-
+import { Asset } from 'expo-asset';
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -88,82 +87,79 @@ const App = () => {
 
     useEffect(() => {
         const initializeApp = async () => {
-            try {
-                const userFromLocalStorage = await AsyncStorage.getItem('user');
-                if (userFromLocalStorage) {
-                    try {
-                        const parsedUser = JSON.parse(userFromLocalStorage);
-                        setUser(parsedUser);
-                        setInitializing(false);
-                        console.log('Пользователь загружен из localStorage ' + auth.currentUser);
-                    } catch (error) {
-                        console.log('Ошибка при разборе JSON:', error);
-                    }
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Пользователь уже зарегистрирован
+                    setUser(user);
                 } else {
-                    try {
-                        await signInAnonymously(auth);
-                        const anonymousUser = auth.currentUser;
-                        setUser(anonymousUser);
+                    // Пользователь не зарегистрирован, выполнение анонимной регистрации
+                    const registerAnonymousUser = async () => {
                         try {
-                            await AsyncStorage.setItem('user', JSON.stringify(auth.currentUser));
-                            console.log('Пользователь сохранен в AsyncStorage');
+                            await signInAnonymously(auth);
+                            const anonymousUser = auth.currentUser;
+                            setUser(anonymousUser);
+                            console.log("Anonymous user logged in");
                         } catch (error) {
-                            console.error('Ошибка при сохранении пользователя в AsyncStorage:', error);
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            console.log("Error while logging in anonymously:", errorCode, errorMessage);
                         }
-                        console.log('Анонимный пользователь вошел в систему');
-                    } catch (error) {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log('Ошибка при входе анонимного пользователя:', errorCode, errorMessage);
-                    }
-                    setInitializing(false);
+                    };
+
+                    registerAnonymousUser().then();
                 }
-            } catch (error) {
-                console.log('Ошибка при получении данных из AsyncStorage:', error);
-            }
+            });
+
+            await loadTheme();
+            await saveTheme();
+            await loadImages();
+            setInitializing(false);
+            return () => {
+                unsubscribe();
+            };
         };
 
         initializeApp().then();
     }, []);
 
-    return (
-        <SafeAreaProvider>
-            {initializing || !fontsLoaded ? (
-                <View style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg
-                }}>
+
+        return (
+            <SafeAreaProvider>
+                {initializing || !fontsLoaded ? (
                     <View style={{
+                        flex: 1,
+                        justifyContent: "center",
                         alignItems: "center",
-                        marginBottom: 20
+                        backgroundColor: isDarkMode ? mainTheme.colors_dark.bg : mainTheme.colors_light.bg
                     }}>
-                        {isDarkMode ? (
-                            <Image
-                                source={require('./assets/images/logo/logo-dark.png')}
-                                style={{width: wp('70%')}}
-                                resizeMode={"contain"}
-                            />
-                        ) : (
-                            <Image
-                                source={require('./assets/images/logo/logo-light.png')}
-                                style={{width: wp('70%')}}
-                                resizeMode={"contain"}
-                            />
-                        )}
+                        <View style={{
+                            alignItems: "center",
+                            marginBottom: 20
+                        }}>
+                            {isDarkMode ? (
+                                <Image
+                                    source={require('./assets/images/logo/logo-dark.png')}
+                                    style={{width: wp('70%')}}
+                                    resizeMode={"contain"}
+                                />
+                            ) : (
+                                <Image
+                                    source={require('./assets/images/logo/logo-light.png')}
+                                    style={{width: wp('70%')}}
+                                    resizeMode={"contain"}
+                                />
+                            )}
+                        </View>
+                        <ActivityIndicator
+                            size={75}
+                            color={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent}
+                        />
                     </View>
-                    <ActivityIndicator
-                        size={75}
-                        color={isDarkMode ? mainTheme.colors_dark.accent : mainTheme.colors_light.accent}
-                    />
-                </View>
-            ) : (
-                <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode} setInitializing={setInitializing}
-                              setUser={setUser}/>
-            )}
-        </SafeAreaProvider>
-    );
+                ) : (
+                    <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
+                )}
+            </SafeAreaProvider>
+        );
 };
 
 export default App;

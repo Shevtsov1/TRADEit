@@ -5,8 +5,6 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import SearchBar from "./SearchBar";
 import {GradientText} from "./GradientText";
 import {auth} from "../firebase/firebaseConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {signInAnonymously} from "firebase/auth";
 
 const AuthScreenHeader = ({theme, isDarkMode, styles, textGradientStartColor, textGradientEndColor, navigation}) => {
 
@@ -92,26 +90,11 @@ const FavoritesScreenHeader = ({theme, isDarkMode, styles, textGradientStartColo
     );
 };
 
-const ProfileScreenHeader = ({user, theme, isDarkMode, setUser, styles}) => {
+const ProfileScreenHeader = ({user, theme, isDarkMode, setInitializing, styles}) => {
     const handleSignOutBtn = () => {
-        auth.signOut().then(async () => {
-            try {
-                await signInAnonymously(auth);
-                const anonymousUser = auth.currentUser;
-                setUser(anonymousUser);
-                try {
-                    await AsyncStorage.setItem('user', JSON.stringify(auth.currentUser));
-                    console.log('Пользователь вышел из аккаунта. AsyncStorage обновлен.');
-                } catch (error) {
-                    console.error('Ошибка при обновлении AsyncStorage при выходе из акканута:', error);
-                }
-                console.log('Пользовтель вышел из аккаунта');
-            } catch (error) {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log('Ошибка при выходе из аккаунта:', errorCode, errorMessage);
-            }
-        });
+        setInitializing(true);
+        auth.signOut().then();
+        setInitializing(false);
     }
     return (
         <View style={styles.header}>
@@ -148,7 +131,7 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, setUser, styles}) => {
     );
 };
 
-const ScreenHeader = ({user, theme, isDarkMode, page, setUser, navigation}) => {
+const ScreenHeader = ({user, theme, isDarkMode, page, setInitializing, navigation}) => {
         const {colors_dark, colors_light} = theme;
         const textGradientStartColor = isDarkMode ? colors_dark.accent : colors_light.accent;
         const textGradientEndColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
@@ -191,7 +174,7 @@ const ScreenHeader = ({user, theme, isDarkMode, page, setUser, navigation}) => {
         } else if (page === 'profile') {
             return <ProfileScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
                                         textGradientStartColor={textGradientStartColor}
-                                        textGradientEndColor={textGradientEndColor} user={user} setUser={setUser}/>;
+                                        textGradientEndColor={textGradientEndColor} user={user} setInitializing={setInitializing}/>;
         } else if (page === 'auth') {
             return <AuthScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
                                      textGradientStartColor={textGradientStartColor}

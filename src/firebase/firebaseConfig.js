@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import {initializeAppCheck, ReCaptchaEnterpriseProvider} from "firebase/app-check";
 
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     View,
     Text,
@@ -8,17 +8,15 @@ import {
     Animated,
     Easing,
     StyleSheet,
-    ActivityIndicator,
-    ToastAndroid,
+    ActivityIndicator, ToastAndroid
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import {CheckBox, Divider, Icon, Input, Dialog} from "react-native-elements";
-import {EmailAuthProvider, GoogleAuthProvider, signInWithCredential, linkWithCredential} from "firebase/auth";
+import {CheckBox, Divider, Icon, Input} from "react-native-elements";
+import {EmailAuthProvider, linkWithCredential} from "firebase/auth";
 import TermsCheckbox from "./TermsCheckbox";
 import {auth} from "../../../../firebase/firebaseConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
+const LogUp = ({theme, isDarkMode, setInitializing}) => {
     const [isAdviceShown, setIsAdviceShown] = useState(true);
     const [accountType, setAccountType] = useState('personal');
     const [adviceHeight, setAdviceHeight] = useState(0);
@@ -26,6 +24,7 @@ const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
     const [isConfirmPasswordSecure, setIsConfirmPasswordSecure] = useState(true);
     const [authBtnDisabled, setAuthBtnDisabled] = useState(true);
     const [btnIsLoading, setBtnIsLoading] = useState(false);
+    const [snackbarIsVisible, setTooltipIsVisible] = useState(true);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -122,43 +121,17 @@ const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
         setTermsAccepted(isChecked);
     };
 
-    const handleGoogleAuthBtn = () => {
-        const provider = new GoogleAuthProvider();
-        signInWithCredential(auth, provider)
-            .then((result) => {
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                const user = result.user;
-                // Дополнительные действия после успешной аутентификации
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // Обработка ошибки аутентификации
-            });
-    };
-
     const handleLogUpBtn = () => {
         setInitializing(true);
         let toastText = '';
         let errorCaught = false;
-        const prevUser = auth.currentUser;
         linkWithCredential(auth.currentUser, credential)
-            .then(async () => {
-                setUser(auth.currentUser);
-                if (prevUser.isAnonymous) {
-                    await prevUser.delete();
-                }
+            .then(() => {
                 toastText = 'Регистрация завершена успешно';
-                try {
-                    await AsyncStorage.setItem('user', JSON.stringify(auth.currentUser));
-                    console.log('Пользователь сохранен в AsyncStorage');
-                } catch (error) {
-                    console.error('Ошибка при сохранении пользователя в AsyncStorage:', error);
-                }
+
             }).catch((error) => {
-                errorCaught = true;
-                toastText = 'Ошибка регистрации, ' + error.message;
+            errorCaught = true;
+            toastText = 'Ошибка регистрации, ' + error.message;
         });
         setTimeout(() => {
             setInitializing(false);
@@ -292,53 +265,6 @@ const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
                         </View>
                         <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
                                  style={{marginBottom: hp(1)}}/>
-                        {accountType === 'personal' &&
-                            <>
-                                <View>
-                                    <Text style={{
-                                        fontFamily: 'Montserrat-SemiBold',
-                                        fontSize: 16,
-                                        marginStart: wp(3),
-                                        marginBottom: hp(1),
-                                        color: textColor,
-                                    }}>Сервисы</Text>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <TouchableOpacity style={{
-                                            width: 42,
-                                            height: 42,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            marginStart: wp(3),
-                                            marginBottom: hp(1),
-                                            borderRadius: 5,
-                                            borderWidth: 1,
-                                            borderColor: theme.neutral.ntrl50,
-                                            backgroundColor: bgColor,
-                                        }}>
-                                            <Image source={require('../../../../../assets/images/telephone.png')}
-                                                   style={{height: 26, width: 26, resizeMode: 'contain'}}/>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{
-                                            width: 42,
-                                            height: 42,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            marginStart: wp(3),
-                                            marginBottom: hp(1),
-                                            borderRadius: 5,
-                                            borderWidth: 1,
-                                            borderColor: theme.neutral.ntrl50,
-                                            backgroundColor: bgColor,
-                                        }}>
-                                            <Image source={require('../../../../../assets/images/google-icon.png')}
-                                                   style={{height: 24, width: 24, resizeMode: 'contain'}}/>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
-                                         style={{marginBottom: hp(1)}}/>
-                            </>
-                        }
                         <View>
                             <Input
                                 containerStyle={{height: 60, paddingHorizontal: 0}}
@@ -382,16 +308,6 @@ const LogUp = ({theme, isDarkMode, setUser, navigation, setInitializing}) => {
                                 value={password}
                                 onChangeText={handlePasswordChange}
                             />
-                            <View style={{
-                                marginTop: (password && (!hasMinimumLength || !hasUppercaseLetter || !hasLowercaseLetter || !hasDigit) ? hp(1.5) : 0),
-                                paddingHorizontal: wp(3)
-                            }}>
-                                <Text style={styles.passwordRequirementsText}>Пароль должен содержать:</Text>
-                                <Text style={styles.passwordRequirementsText}>Минимум 8 символов</Text>
-                                <Text style={styles.passwordRequirementsText}>Большую букву</Text>
-                                <Text style={styles.passwordRequirementsText}>Маленькую букву</Text>
-                                <Text style={styles.passwordRequirementsText}>Цифру</Text>
-                            </View>
                             <Input
                                 containerStyle={{
                                     height: 60, paddingHorizontal: 0,

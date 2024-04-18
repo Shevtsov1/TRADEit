@@ -6,7 +6,7 @@ import LogUp from "./components/logUp";
 import ScreenHeader from "../../../components/ScreenHeader";
 import {widthPercentageToDP as wp, widthPercentageToDP} from "react-native-responsive-screen";
 
-const Auth = ({theme, isDarkMode, user, navigation, setInitializing, setUser}) => {
+const Auth = ({theme, isDarkMode, user, navigation, setInitializing}) => {
     const [activeAuthBtn, setActiveAuthBtn] = useState('Вход');
     const activeAuthBtnAnimatedValue = useRef(new Animated.Value(0)).current;
     const bgColor = isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg;
@@ -16,7 +16,7 @@ const Auth = ({theme, isDarkMode, user, navigation, setInitializing, setUser}) =
     const Tab = createMaterialTopTabNavigator();
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
             <ScreenHeader theme={theme} isDarkMode={isDarkMode} user={user} page={'auth'} navigation={navigation}/>
             <Tab.Navigator
                 initialRouteName={'LogIn'}
@@ -52,8 +52,7 @@ const Auth = ({theme, isDarkMode, user, navigation, setInitializing, setUser}) =
                     }}
                 >
                     {(props) => (
-                        <LogIn {...props} user={user} theme={theme} isDarkMode={isDarkMode}
-                               setInitializing={setInitializing} setUser={setUser}/>
+                        <LogIn {...props} user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
                     )}
                 </Tab.Screen>
                 <Tab.Screen
@@ -63,8 +62,7 @@ const Auth = ({theme, isDarkMode, user, navigation, setInitializing, setUser}) =
                     }}
                 >
                     {(props) => (
-                        <LogUp {...props} user={user} theme={theme} isDarkMode={isDarkMode}
-                               setInitializing={setInitializing} setUser={setUser}/>
+                        <LogUp {...props} user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
                     )}
                 </Tab.Screen>
             </Tab.Navigator>
