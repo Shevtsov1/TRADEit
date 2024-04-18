@@ -2,22 +2,21 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     Image,
     ScrollView,
     Animated,
     Easing,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator, ToastAndroid
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import {CheckBox, Divider, Icon, Input, Tooltip} from "react-native-elements";
-import {EmailAuthProvider, GoogleAuthProvider, signInWithCredential, linkWithCredential} from "firebase/auth";
+import {CheckBox, Divider, Icon, Input} from "react-native-elements";
+import {EmailAuthProvider, GoogleAuthProvider, signInWithPopup, linkWithCredential} from "firebase/auth";
 import TermsCheckbox from "./TermsCheckbox";
 import {auth} from "../../../../firebase/firebaseConfig";
 
-const LogUp = ({theme, isDarkMode, user}) => {
+const LogUp = ({theme, isDarkMode, setInitializing}) => {
     const [isAdviceShown, setIsAdviceShown] = useState(true);
     const [accountType, setAccountType] = useState('personal');
     const [adviceHeight, setAdviceHeight] = useState(0);
@@ -124,30 +123,44 @@ const LogUp = ({theme, isDarkMode, user}) => {
 
     const handleGoogleAuthBtn = () => {
         const provider = new GoogleAuthProvider();
-        signInWithCredential(auth, provider)
+
+        signInWithPopup(auth, provider)
             .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
+                // The signed-in user info.
                 const user = result.user;
-                // Дополнительные действия после успешной аутентификации
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // Обработка ошибки аутентификации
-            });
+                // IdP data available using getAdditionalUserInfo(result)
+                // ...
+            }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+        });
     };
 
     const handleLogUpBtn = () => {
-        setBtnIsLoading(true);
+        setInitializing(true);
+        let toastText = '';
+        let errorCaught = false;
+        const prevUser = auth.currentUser;
         linkWithCredential(auth.currentUser, credential)
             .then(() => {
-                console.log("Anonymous account successfully upgraded", user);
+                toastText = 'Регистрация завершена успешно';
+
             }).catch((error) => {
-            console.log("Error upgrading anonymous account", error);
+            errorCaught = true;
+            toastText = 'Ошибка регистрации, ' + error.message;
         });
         setTimeout(() => {
-            setBtnIsLoading(false);
+            setInitializing(false);
+            ToastAndroid.show(toastText, 10000);
         }, 2000);
     }
 
@@ -350,16 +363,6 @@ const LogUp = ({theme, isDarkMode, user}) => {
                                 value={password}
                                 onChangeText={handlePasswordChange}
                             />
-                            <View style={{
-                                marginTop: (password && (!hasMinimumLength || !hasUppercaseLetter || !hasLowercaseLetter || !hasDigit) ? hp(1.5) : 0),
-                                paddingHorizontal: wp(3)
-                            }}>
-                                <Text style={styles.passwordRequirementsText}>Пароль должен содержать:</Text>
-                                <Text style={styles.passwordRequirementsText}>Минимум 8 символов</Text>
-                                <Text style={styles.passwordRequirementsText}>Большую букву</Text>
-                                <Text style={styles.passwordRequirementsText}>Маленькую букву</Text>
-                                <Text style={styles.passwordRequirementsText}>Цифру</Text>
-                            </View>
                             <Input
                                 containerStyle={{
                                     height: 60, paddingHorizontal: 0,

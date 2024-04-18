@@ -1,16 +1,28 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, Animated, Easing, StyleSheet, ScrollView, Image, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    Animated,
+    Easing,
+    ScrollView,
+    Image,
+    TouchableOpacity,
+    ToastAndroid
+} from 'react-native';
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import {CheckBox, Divider, Icon, Input} from "react-native-elements";
+import {Divider, Icon, Input} from "react-native-elements";
+import {signInWithEmailAndPassword, deleteUser} from "firebase/auth";
+import {auth} from "../../../../firebase/firebaseConfig";
 
-const LogIn = ({theme, isDarkMode, user}) => {
+const LogIn = ({theme, isDarkMode, setInitializing}) => {
     const [isAdviceShown, setIsAdviceShown] = useState(true);
-    const [adviceHeight, setAdviceHeight] = useState(0);
     const [isPasswordSecure, setIsPasswordSecure] = useState(true);
     const [authBtnDisabled, setAuthBtnDisabled] = useState(true);
+    const [phoneAuthForm, setPhoneAuthForm] = useState(false);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [tel, setTel] = useState('');
 
 
     const bgColor = isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg;
@@ -72,11 +84,6 @@ const LogIn = ({theme, isDarkMode, user}) => {
         outputRange: [0, 1],
     });
 
-    const handleAdviceLayout = (event) => {
-        const {height} = event.nativeEvent.layout;
-        setAdviceHeight(height);
-    };
-
     const handleEmailClear = () => {
         setEmail('');
     }
@@ -89,13 +96,26 @@ const LogIn = ({theme, isDarkMode, user}) => {
         setPassword(value);
     }
 
-    const styles = StyleSheet.create({
-        passwordRequirementsText: {
-            fontFamily: 'Montserrat-Medium',
-            fontSize: 12,
-            color: textColor,
-        }
-    })
+    const handleTelChange = (value) => {
+        setTel(value);
+    }
+
+    const handleLogInBtn = () => {
+        setInitializing(true);
+        let toastText = '';
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                toastText = 'Вход выполнен успешно';
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                toastText = 'Ошибка входа, ' + errorMessage;
+            })
+            .finally(() => {
+                setInitializing(false);
+                ToastAndroid.show(toastText, 10000);
+            });
+    };
 
     return (
         <ScrollView style={{
@@ -113,7 +133,7 @@ const LogIn = ({theme, isDarkMode, user}) => {
                         opacity: adviceOpacity,
                         elevation: 1,
                         shadowColor: textColor,
-                    }} onLayout={handleAdviceLayout}>
+                    }}>
                         <Text
                             style={{fontFamily: 'Montserrat-Medium', fontSize: 14, color: textColor, marginBottom: 6,}}>Войдите,
                             чтобы:</Text>
@@ -160,14 +180,29 @@ const LogIn = ({theme, isDarkMode, user}) => {
                         </TouchableOpacity>
                     </Animated.View>
                 }
-                <View>
-                    <Text style={{
-                        fontFamily: 'Montserrat-SemiBold',
-                        fontSize: 16,
+                <Text style={{
+                    fontFamily: 'Montserrat-SemiBold',
+                    fontSize: 16,
+                    marginStart: wp(3),
+                    color: textColor,
+                }}>Сервисы</Text>
+                <View style={{flexDirection: 'row', marginTop: hp(1)}}>
+                    <TouchableOpacity style={{
+                        width: 42,
+                        height: 42,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         marginStart: wp(3),
                         marginBottom: hp(1),
-                        color: textColor,
-                    }}>Сервисы</Text>
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        borderColor: theme.neutral.ntrl50,
+                        backgroundColor: bgColor,
+                    }} onPress={() => setPhoneAuthForm(!phoneAuthForm)}>
+                        <Image
+                            source={phoneAuthForm ? require('../../../../../assets/images/email.png') : require('../../../../../assets/images/telephone.png')}
+                            style={{height: 26, width: 26, resizeMode: 'contain'}}/>
+                    </TouchableOpacity>
                     <TouchableOpacity style={{
                         width: 42,
                         height: 42,
@@ -186,50 +221,84 @@ const LogIn = ({theme, isDarkMode, user}) => {
                 </View>
                 <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
                          style={{marginBottom: hp(1)}}/>
-                <View>
-                    <Input
-                        containerStyle={{height: 60, paddingHorizontal: 0}}
-                        inputContainerStyle={{
-                            paddingHorizontal: wp(3),
-                            borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
-                        }}
-                        disabledInputStyle={{background: "#ddd"}}
-                        inputMode={'email'}
-                        inputStyle={{color: textColor}}
-                        errorMessage=""
-                        leftIcon={<Icon type={'ionicon'} name='mail-outline' color={textColor}/>}
-                        rightIcon={email &&
-                            <TouchableOpacity onPress={handleEmailClear}><Icon type={'ionicon'} name={'close'}
-                                                                               color={textColor}/></TouchableOpacity>}
-                        labelStyle={{color: textColor}}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={handleEmailChange}
-                    />
-                    <Input
-                        containerStyle={{height: 60, paddingHorizontal: 0}}
-                        inputContainerStyle={{
-                            paddingHorizontal: wp(3),
-                            borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
-                        }}
-                        disabledInputStyle={{background: "#ddd"}}
-                        inputStyle={{color: textColor}}
-                        errorStyle={{marginStart: wp(3)}}
-                        errorMessage={password ? (hasAllRequirements ? '' : 'Пароль не соответствует требованиям') : ''}
-                        leftIcon={<Icon type={'ionicon'} name='key-outline' color={textColor}/>}
-                        rightIcon={password &&
-                            <TouchableOpacity onPress={() => setIsPasswordSecure(!isPasswordSecure)}>
-                                <Icon color={textColor}
-                                      type={'ionicon'}
-                                      name={isPasswordSecure ? 'eye-outline' : 'eye-off-outline'}/>
-                            </TouchableOpacity>}
-                        labelStyle={{color: textColor}}
-                        placeholder="Пароль"
-                        secureTextEntry={isPasswordSecure}
-                        value={password}
-                        onChangeText={handlePasswordChange}
-                    />
-                </View>
+                {phoneAuthForm ? (
+                    <>
+                        <View style={{marginStart: wp(16)}}>
+                            <Image source={require('../../../../../assets/images/usingPhone/type-numbers.png')}
+                                   style={{width: 192, height: 192}}/>
+                        </View>
+                        <Text style={{fontFamily: 'Montserrat-Medium', color: textColor}}>Введите номер телефона в
+                            формате 123456789</Text>
+                        <Input
+                            containerStyle={{height: 60, paddingHorizontal: 0}}
+                            inputContainerStyle={{
+                                paddingHorizontal: wp(3),
+                                borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
+                            }}
+                            disabledInputStyle={{background: "#ddd"}}
+                            inputMode={'tel'}
+                            inputStyle={{color: textColor}}
+                            errorMessage=""
+                            leftIcon={<Icon type={'ionicon'} name='call-outline' color={textColor}/>}
+                            rightIcon={tel &&
+                                <TouchableOpacity onPress={handleEmailClear}><Icon type={'ionicon'} name={'close'}
+                                                                                   color={textColor}/></TouchableOpacity>}
+                            labelStyle={{color: textColor}}
+                            placeholder="Номер телефона"
+                            value={tel}
+                            onChangeText={handleTelChange}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <View style={{marginStart: wp(20)}}>
+                            <Image source={require('../../../../../assets/images/usingPhone/type-email.png')}
+                                   style={{width: 168, height: 168}}/>
+                        </View>
+                        <Input
+                            containerStyle={{height: 60, paddingHorizontal: 0}}
+                            inputContainerStyle={{
+                                paddingHorizontal: wp(3),
+                                borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
+                            }}
+                            disabledInputStyle={{background: "#ddd"}}
+                            inputMode={'email'}
+                            inputStyle={{color: textColor}}
+                            errorMessage=""
+                            leftIcon={<Icon type={'ionicon'} name='mail-outline' color={textColor}/>}
+                            rightIcon={email &&
+                                <TouchableOpacity onPress={handleEmailClear}><Icon type={'ionicon'} name={'close'}
+                                                                                   color={textColor}/></TouchableOpacity>}
+                            labelStyle={{color: textColor}}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={handleEmailChange}
+                        />
+                        <Input
+                            containerStyle={{height: 60, paddingHorizontal: 0}}
+                            inputContainerStyle={{
+                                paddingHorizontal: wp(3),
+                                borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
+                            }}
+                            disabledInputStyle={{background: "#ddd"}}
+                            inputStyle={{color: textColor}}
+                            errorStyle={{marginStart: wp(3)}}
+                            errorMessage={password ? (hasAllRequirements ? '' : 'Пароль не соответствует требованиям') : ''}
+                            leftIcon={<Icon type={'ionicon'} name='key-outline' color={textColor}/>}
+                            rightIcon={password &&
+                                <TouchableOpacity onPress={() => setIsPasswordSecure(!isPasswordSecure)}>
+                                    <Icon color={textColor}
+                                          type={'ionicon'}
+                                          name={isPasswordSecure ? 'eye-outline' : 'eye-off-outline'}/>
+                                </TouchableOpacity>}
+                            labelStyle={{color: textColor}}
+                            placeholder="Пароль"
+                            secureTextEntry={isPasswordSecure}
+                            value={password}
+                            onChangeText={handlePasswordChange}
+                        />
+                    </>
+                )}
                 <TouchableOpacity
                     style={{
                         alignSelf: 'center',
@@ -240,7 +309,8 @@ const LogIn = ({theme, isDarkMode, user}) => {
                         alignItems: 'center',
                         backgroundColor: authBtnDisabled ? theme.neutral.ntrl50 : accentColor
                     }}
-                    disabled={authBtnDisabled}>
+                    disabled={authBtnDisabled}
+                    onPress={handleLogInBtn}>
                     <Text style={{
                         fontFamily: 'Montserrat-Bold',
                         fontSize: 16,

@@ -90,9 +90,11 @@ const FavoritesScreenHeader = ({theme, isDarkMode, styles, textGradientStartColo
     );
 };
 
-const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
+const ProfileScreenHeader = ({user, theme, isDarkMode, setInitializing, styles}) => {
     const handleSignOutBtn = () => {
+        setInitializing(true);
         auth.signOut().then();
+        setInitializing(false);
     }
     return (
         <View style={styles.header}>
@@ -129,7 +131,7 @@ const ProfileScreenHeader = ({user, theme, isDarkMode, styles}) => {
     );
 };
 
-const ScreenHeader = ({user, theme, isDarkMode, page, navigation}) => {
+const ScreenHeader = ({user, theme, isDarkMode, page, setInitializing, navigation}) => {
         const {colors_dark, colors_light} = theme;
         const textGradientStartColor = isDarkMode ? colors_dark.accent : colors_light.accent;
         const textGradientEndColor = isDarkMode ? colors_dark.secondary : colors_light.secondary;
@@ -172,7 +174,7 @@ const ScreenHeader = ({user, theme, isDarkMode, page, navigation}) => {
         } else if (page === 'profile') {
             return <ProfileScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
                                         textGradientStartColor={textGradientStartColor}
-                                        textGradientEndColor={textGradientEndColor} user={user}/>;
+                                        textGradientEndColor={textGradientEndColor} user={user} setInitializing={setInitializing}/>;
         } else if (page === 'auth') {
             return <AuthScreenHeader theme={theme} isDarkMode={isDarkMode} styles={styles}
                                      textGradientStartColor={textGradientStartColor}

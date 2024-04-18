@@ -183,7 +183,7 @@ const TabButton = React.memo((props) => {
 });
 
 // Компонент нижней навигации по вкладкам
-const BottomTabNavigator = ({user, theme, isDarkMode}) => {
+const BottomTabNavigator = ({user, theme, isDarkMode, setInitializing}) => {
     return (
         <SafeAreaView style={{flex: 1}}>
             <Tab.Navigator
@@ -208,7 +208,7 @@ const BottomTabNavigator = ({user, theme, isDarkMode}) => {
                                         ),
                                     }}
                         >
-                            {(props) => <item.component {...props} user={user} theme={theme} isDarkMode={isDarkMode}/>}
+                            {(props) => <item.component {...props} user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>}
                         </Tab.Screen>
                     )
                 })}
@@ -218,9 +218,9 @@ const BottomTabNavigator = ({user, theme, isDarkMode}) => {
 }
 
 // Компонент навигации приложения
-const AppNavigator = ({user, theme, isDarkMode}) => (
+const AppNavigator = ({user, theme, isDarkMode, setInitializing}) => (
     <NavigationContainer>
-        <BottomTabNavigator user={user} theme={theme} isDarkMode={isDarkMode}/>
+        <BottomTabNavigator user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
     </NavigationContainer>
 );
 

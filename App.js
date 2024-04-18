@@ -120,7 +120,7 @@ const App = () => {
         };
 
         initializeApp().then();
-    }, [isDarkMode]);
+    }, []);
 
 
         return (
@@ -156,7 +156,7 @@ const App = () => {
                         />
                     </View>
                 ) : (
-                    <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode}/>
+                    <AppNavigator user={user} theme={mainTheme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
                 )}
             </SafeAreaProvider>
         );

@@ -6,7 +6,7 @@ import LogUp from "./components/logUp";
 import ScreenHeader from "../../../components/ScreenHeader";
 import {widthPercentageToDP as wp, widthPercentageToDP} from "react-native-responsive-screen";
 
-const Auth = ({theme, isDarkMode, user, navigation}) => {
+const Auth = ({theme, isDarkMode, user, navigation, setInitializing}) => {
     const [activeAuthBtn, setActiveAuthBtn] = useState('Вход');
     const activeAuthBtnAnimatedValue = useRef(new Animated.Value(0)).current;
     const bgColor = isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg;
@@ -17,7 +17,7 @@ const Auth = ({theme, isDarkMode, user, navigation}) => {
 
     return (
         <View style={{ flex: 1 }}>
-            <ScreenHeader theme={theme} isDarkMode={isDarkMode} user={user} page={'auth'} navigation={navigation} />
+            <ScreenHeader theme={theme} isDarkMode={isDarkMode} user={user} page={'auth'} navigation={navigation}/>
             <Tab.Navigator
                 initialRouteName={'LogIn'}
                 screenOptions={{
@@ -52,7 +52,7 @@ const Auth = ({theme, isDarkMode, user, navigation}) => {
                     }}
                 >
                     {(props) => (
-                        <LogIn {...props} user={user} theme={theme} isDarkMode={isDarkMode}/>
+                        <LogIn {...props} user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
                     )}
                 </Tab.Screen>
                 <Tab.Screen
@@ -62,7 +62,7 @@ const Auth = ({theme, isDarkMode, user, navigation}) => {
                     }}
                 >
                     {(props) => (
-                        <LogUp {...props} user={user} theme={theme} isDarkMode={isDarkMode}/>
+                        <LogUp {...props} user={user} theme={theme} isDarkMode={isDarkMode} setInitializing={setInitializing}/>
                     )}
                 </Tab.Screen>
             </Tab.Navigator>
