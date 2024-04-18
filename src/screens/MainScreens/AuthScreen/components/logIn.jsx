@@ -10,8 +10,8 @@ import {
     ToastAndroid
 } from 'react-native';
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import {Divider, Icon, Input} from "react-native-elements";
-import {signInWithEmailAndPassword, deleteUser} from "firebase/auth";
+import {Icon, Input} from "react-native-elements";
+import {signInWithEmailAndPassword} from "firebase/auth";
 import {auth} from "../../../../firebase/firebaseConfig";
 
 const LogIn = ({theme, isDarkMode, setInitializing}) => {
@@ -22,8 +22,6 @@ const LogIn = ({theme, isDarkMode, setInitializing}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [tel, setTel] = useState('');
-
 
     const bgColor = isDarkMode ? theme.colors_dark.bg : theme.colors_light.bg;
     const backColor = isDarkMode ? theme.colors_dark.back : theme.colors_light.back;
@@ -96,25 +94,21 @@ const LogIn = ({theme, isDarkMode, setInitializing}) => {
         setPassword(value);
     }
 
-    const handleTelChange = (value) => {
-        setTel(value);
-    }
-
     const handleLogInBtn = () => {
         setInitializing(true);
         let toastText = '';
-        signInWithEmailAndPassword(auth, email, password)
-            .then(() => {
-                toastText = 'Вход выполнен успешно';
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                toastText = 'Ошибка входа, ' + errorMessage;
-            })
-            .finally(() => {
-                setInitializing(false);
-                ToastAndroid.show(toastText, 10000);
-            });
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    toastText = 'Вход выполнен успешно';
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    toastText = 'Ошибка входа, ' + errorMessage;
+                })
+                .finally(() => {
+                    setInitializing(false);
+                    ToastAndroid.show(toastText, 10000);
+                });
     };
 
     return (
@@ -180,77 +174,6 @@ const LogIn = ({theme, isDarkMode, setInitializing}) => {
                         </TouchableOpacity>
                     </Animated.View>
                 }
-                <Text style={{
-                    fontFamily: 'Montserrat-SemiBold',
-                    fontSize: 16,
-                    marginStart: wp(3),
-                    color: textColor,
-                }}>Сервисы</Text>
-                <View style={{flexDirection: 'row', marginTop: hp(1)}}>
-                    <TouchableOpacity style={{
-                        width: 42,
-                        height: 42,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: wp(3),
-                        marginBottom: hp(1),
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: theme.neutral.ntrl50,
-                        backgroundColor: bgColor,
-                    }} onPress={() => setPhoneAuthForm(!phoneAuthForm)}>
-                        <Image
-                            source={phoneAuthForm ? require('../../../../../assets/images/email.png') : require('../../../../../assets/images/telephone.png')}
-                            style={{height: 26, width: 26, resizeMode: 'contain'}}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        width: 42,
-                        height: 42,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: wp(3),
-                        marginBottom: hp(1),
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: theme.neutral.ntrl50,
-                        backgroundColor: bgColor,
-                    }}>
-                        <Image source={require('../../../../../assets/images/google-icon.png')}
-                               style={{height: 24, width: 24, resizeMode: 'contain'}}/>
-                    </TouchableOpacity>
-                </View>
-                <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
-                         style={{marginBottom: hp(1)}}/>
-                {phoneAuthForm ? (
-                    <>
-                        <View style={{marginStart: wp(16)}}>
-                            <Image source={require('../../../../../assets/images/usingPhone/type-numbers.png')}
-                                   style={{width: 192, height: 192}}/>
-                        </View>
-                        <Text style={{fontFamily: 'Montserrat-Medium', color: textColor}}>Введите номер телефона в
-                            формате 123456789</Text>
-                        <Input
-                            containerStyle={{height: 60, paddingHorizontal: 0}}
-                            inputContainerStyle={{
-                                paddingHorizontal: wp(3),
-                                borderColor: isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70
-                            }}
-                            disabledInputStyle={{background: "#ddd"}}
-                            inputMode={'tel'}
-                            inputStyle={{color: textColor}}
-                            errorMessage=""
-                            leftIcon={<Icon type={'ionicon'} name='call-outline' color={textColor}/>}
-                            rightIcon={tel &&
-                                <TouchableOpacity onPress={handleEmailClear}><Icon type={'ionicon'} name={'close'}
-                                                                                   color={textColor}/></TouchableOpacity>}
-                            labelStyle={{color: textColor}}
-                            placeholder="Номер телефона"
-                            value={tel}
-                            onChangeText={handleTelChange}
-                        />
-                    </>
-                ) : (
-                    <>
                         <View style={{marginStart: wp(20)}}>
                             <Image source={require('../../../../../assets/images/usingPhone/type-email.png')}
                                    style={{width: 168, height: 168}}/>
@@ -297,8 +220,6 @@ const LogIn = ({theme, isDarkMode, setInitializing}) => {
                             value={password}
                             onChangeText={handlePasswordChange}
                         />
-                    </>
-                )}
                 <TouchableOpacity
                     style={{
                         alignSelf: 'center',

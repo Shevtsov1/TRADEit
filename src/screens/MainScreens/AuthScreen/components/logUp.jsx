@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
 import {CheckBox, Divider, Icon, Input} from "react-native-elements";
-import {EmailAuthProvider, GoogleAuthProvider, signInWithPopup, linkWithCredential} from "firebase/auth";
+import {EmailAuthProvider, linkWithCredential} from "firebase/auth";
 import TermsCheckbox from "./TermsCheckbox";
 import {auth} from "../../../../firebase/firebaseConfig";
 
@@ -121,35 +121,10 @@ const LogUp = ({theme, isDarkMode, setInitializing}) => {
         setTermsAccepted(isChecked);
     };
 
-    const handleGoogleAuthBtn = () => {
-        const provider = new GoogleAuthProvider();
-
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential = GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                // The signed-in user info.
-                const user = result.user;
-                // IdP data available using getAdditionalUserInfo(result)
-                // ...
-            }).catch((error) => {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.customData.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
-            // ...
-        });
-    };
-
     const handleLogUpBtn = () => {
         setInitializing(true);
         let toastText = '';
         let errorCaught = false;
-        const prevUser = auth.currentUser;
         linkWithCredential(auth.currentUser, credential)
             .then(() => {
                 toastText = 'Регистрация завершена успешно';
@@ -290,36 +265,6 @@ const LogUp = ({theme, isDarkMode, setInitializing}) => {
                         </View>
                         <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
                                  style={{marginBottom: hp(1)}}/>
-                        {accountType === 'personal' &&
-                            <>
-                                <View>
-                                    <Text style={{
-                                        fontFamily: 'Montserrat-SemiBold',
-                                        fontSize: 16,
-                                        marginStart: wp(3),
-                                        marginBottom: hp(1),
-                                        color: textColor,
-                                    }}>Сервисы</Text>
-                                    <TouchableOpacity style={{
-                                        width: 42,
-                                        height: 42,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginStart: wp(3),
-                                        marginBottom: hp(1),
-                                        borderRadius: 5,
-                                        borderWidth: 1,
-                                        borderColor: theme.neutral.ntrl50,
-                                        backgroundColor: bgColor,
-                                    }} onPress={handleGoogleAuthBtn}>
-                                        <Image source={require('../../../../../assets/images/google-icon.png')}
-                                               style={{height: 24, width: 24, resizeMode: 'contain'}}/>
-                                    </TouchableOpacity>
-                                </View>
-                                <Divider width={1} color={isDarkMode ? theme.neutral.ntrl50 : theme.neutral.ntrl70}
-                                         style={{marginBottom: hp(1)}}/>
-                            </>
-                        }
                         <View>
                             <Input
                                 containerStyle={{height: 60, paddingHorizontal: 0}}
